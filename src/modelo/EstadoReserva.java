@@ -1,5 +1,8 @@
 package modelo;
 
-public class EstadoReserva {
-    
+public enum EstadoReserva {
+    PENDIENTE,
+    CONFIRMADA,
+    CANCELADA,
+    COMPLETADA
 }
