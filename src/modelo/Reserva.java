@@ -1,31 +1,38 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Reserva {
-    private String idReserva;
+public class Reserva implements Serializable {
+    private int id;
     private LocalDateTime fechaHora;
     private EstadoReserva estado;
     private Cliente cliente;
     private Barbero barbero;
     private List<Servicio> servicios;
 
-    public Reserva(String idReserva, LocalDateTime fechaHora, Cliente cliente) {
-        if (idReserva == null || idReserva.trim().isEmpty())
-            throw new IllegalArgumentException("El id de la reserva no puede ser nulo o vacío");
+    public Reserva(){
+        this.estado = EstadoReserva.PENDIENTE;
+        this.servicios = new ArrayList<>();
+    }
+
+    public Reserva(int id, LocalDateTime fechaHora, Cliente cliente) {
+        if (id <= 0) 
+            throw new IllegalArgumentException("El id de la reserva debe ser un número positivo.");
         if (fechaHora == null)
             throw new IllegalArgumentException("La fecha y hora no pueden ser nulas");
         if (cliente == null)
             throw new IllegalArgumentException("El cliente no puede ser nulo");
 
-        this.idReserva = idReserva;
+        this.id = id; 
         this.fechaHora = fechaHora;
-        this.estado = EstadoReserva.PENDIENTE;
+        this.estado = EstadoReserva.PENDIENTE; 
         this.cliente = cliente;
         this.servicios = new ArrayList<>();
+        
     }
 
     public void confirmar() {
@@ -56,6 +63,20 @@ public class Reserva {
         return total;
     }
 
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int id){
+        if (id <= 0)
+            throw new IllegalArgumentException("El id de la reserva debe ser un número positivo.");
+        this.id = id;
+    }
+
+    public LocalDateTime getFechaHora(){
+        return fechaHora;
+    }
+
     public void asignarBarbero(Barbero barbero) {
         if (barbero == null) {
             throw new IllegalArgumentException("El barbero no puede ser nulo");
@@ -70,8 +91,8 @@ public class Reserva {
         servicios.add(servicio);
     }
 
-    public String getIdReserva() {
-        return idReserva;
+    public int getId() {
+        return id;
     }
 
     public EstadoReserva getEstado() {
