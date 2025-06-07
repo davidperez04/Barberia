@@ -2,10 +2,11 @@ package modelo;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Reserva {
-      private String idReserva;
+    private String idReserva;
     private LocalDateTime fechaHora;
     private EstadoReserva estado;
     private Cliente cliente;
@@ -13,6 +14,13 @@ public class Reserva {
     private List<Servicio> servicios;
 
     public Reserva(String idReserva, LocalDateTime fechaHora, Cliente cliente) {
+        if (idReserva == null || idReserva.trim().isEmpty())
+            throw new IllegalArgumentException("El id de la reserva no puede ser nulo o vacío");
+        if (fechaHora == null)
+            throw new IllegalArgumentException("La fecha y hora no pueden ser nulas");
+        if (cliente == null)
+            throw new IllegalArgumentException("El cliente no puede ser nulo");
+
         this.idReserva = idReserva;
         this.fechaHora = fechaHora;
         this.estado = EstadoReserva.PENDIENTE;
@@ -40,17 +48,25 @@ public class Reserva {
 
     public double calcularTotal() {
         double total = 0;
-        for (Servicio s : servicios) {
-            total += s.getPrecio();
+        for (Servicio servicio : servicios) {
+            if (servicio != null) {
+                total += servicio.getPrecio();
+            }
         }
         return total;
     }
 
     public void asignarBarbero(Barbero barbero) {
+        if (barbero == null) {
+            throw new IllegalArgumentException("El barbero no puede ser nulo");
+        }
         this.barbero = barbero;
     }
 
     public void agregarServicio(Servicio servicio) {
+        if (servicio == null) {
+            throw new IllegalArgumentException("El servicio no puede ser nulo");
+        }
         servicios.add(servicio);
     }
 
@@ -62,8 +78,26 @@ public class Reserva {
         return estado;
     }
 
-    public void setEstado(EstadoReserva estado) {
-        this.estado = estado;
+    // Solo permite transiciones válidas de estado
+    public void setEstado(EstadoReserva nuevoEstado) {
+        if (nuevoEstado == null) {
+            throw new IllegalArgumentException("El estado no puede ser nulo");
+        }
+        switch (estado) {
+            case PENDIENTE:
+                if (nuevoEstado == EstadoReserva.CONFIRMADA || nuevoEstado == EstadoReserva.CANCELADA) {
+                    this.estado = nuevoEstado;
+                }
+                break;
+            case CONFIRMADA:
+                if (nuevoEstado == EstadoReserva.COMPLETADA || nuevoEstado == EstadoReserva.CANCELADA) {
+                    this.estado = nuevoEstado;
+                }
+                break;
+            default:
+                // No se permite cambiar desde CANCELADA o COMPLETADA
+                break;
+        }
     }
 
     public Cliente getCliente() {
@@ -74,7 +108,8 @@ public class Reserva {
         return barbero;
     }
 
+    // Devuelve una copia inmodificable de la lista de servicios
     public List<Servicio> getServicios() {
-        return servicios;
+        return Collections.unmodifiableList(servicios);
     }
 }
