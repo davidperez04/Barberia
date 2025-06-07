@@ -52,4 +52,16 @@ public class Barbero extends Usuario{
     public void mostrarInformacion() {
         System.out.println("Barbero ID: " + getId() + ", Nombre: " + getNombre() + ", Teléfono: " + getTelefono() + ", Especialidades: " + especialidades);
     }
+
+    @Override
+    public String toString() {
+        return "Barbero{" +
+            "id=" + getId() + 
+            ", nombre='" + getNombre() + '\'' +
+            ", telefono='" + getTelefono() + '\'' +
+            ", especialidades=" + especialidades + 
+            ", numHorarios=" + (horarioTrabajo != null ? horarioTrabajo.size() : 0) +
+            '}';
+    }
+
 }

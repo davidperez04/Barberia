@@ -36,10 +36,10 @@ public class Cliente extends Usuario{
         historialReservas.add(reserva);
     }
 
-    public void cancelarReserva(String idReserva) {
-        for (Reserva reserva : historialReservas) {
-            if (reserva.getIdReserva().equals(idReserva)) {
-                reserva.setEstado(EstadoReserva.CANCELADA);
+    public void cancelarReserva(int idReserva) {
+    for (Reserva reserva : historialReservas) {
+        if (reserva.getIdReserva() == idReserva) { 
+            reserva.setEstado(EstadoReserva.CANCELADA);
             }
         }
     }

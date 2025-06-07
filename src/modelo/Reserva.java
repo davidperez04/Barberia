@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Reserva implements Serializable {
-    private int id;
+    private int idReserva;
     private LocalDateTime fechaHora;
     private EstadoReserva estado;
     private Cliente cliente;
@@ -19,15 +19,15 @@ public class Reserva implements Serializable {
         this.servicios = new ArrayList<>();
     }
 
-    public Reserva(int id, LocalDateTime fechaHora, Cliente cliente) {
-        if (id <= 0) 
+    public Reserva(int idReserva, LocalDateTime fechaHora, Cliente cliente) {
+        if (idReserva <= 0) 
             throw new IllegalArgumentException("El id de la reserva debe ser un número positivo.");
         if (fechaHora == null)
             throw new IllegalArgumentException("La fecha y hora no pueden ser nulas");
         if (cliente == null)
             throw new IllegalArgumentException("El cliente no puede ser nulo");
 
-        this.id = id; 
+        this.idReserva = idReserva; 
         this.fechaHora = fechaHora;
         this.estado = EstadoReserva.PENDIENTE; 
         this.cliente = cliente;
@@ -63,44 +63,31 @@ public class Reserva implements Serializable {
         return total;
     }
 
-    public int getId(){
-        return id;
+    public int getIdReserva(){
+        return idReserva;
     }
 
-    public void setId(int id){
+    public void setIdReserva(int id){
         if (id <= 0)
             throw new IllegalArgumentException("El id de la reserva debe ser un número positivo.");
-        this.id = id;
+        this.idReserva = id;
     }
 
     public LocalDateTime getFechaHora(){
         return fechaHora;
     }
 
-    public void asignarBarbero(Barbero barbero) {
-        if (barbero == null) {
-            throw new IllegalArgumentException("El barbero no puede ser nulo");
-        }
-        this.barbero = barbero;
-    }
-
-    public void agregarServicio(Servicio servicio) {
-        if (servicio == null) {
-            throw new IllegalArgumentException("El servicio no puede ser nulo");
-        }
-        servicios.add(servicio);
-    }
-
-    public int getId() {
-        return id;
+    public void setFechaHora(LocalDateTime fechaHora) { 
+        if (fechaHora == null)
+            throw new IllegalArgumentException("La fecha y hora no pueden ser nulas");
+        this.fechaHora = fechaHora;
     }
 
     public EstadoReserva getEstado() {
         return estado;
     }
 
-    // Solo permite transiciones válidas de estado
-    public void setEstado(EstadoReserva nuevoEstado) {
+     public void setEstado(EstadoReserva nuevoEstado) {
         if (nuevoEstado == null) {
             throw new IllegalArgumentException("El estado no puede ser nulo");
         }
@@ -125,12 +112,45 @@ public class Reserva implements Serializable {
         return cliente;
     }
 
+    public void setCliente(Cliente cliente) {
+        if (cliente == null)
+            throw new IllegalArgumentException("El cliente no puede ser nulo");
+        this.cliente = cliente;
+    }
+
     public Barbero getBarbero() {
         return barbero;
+    }
+
+    public void asignarBarbero(Barbero barbero) {
+        if (barbero == null) {
+            throw new IllegalArgumentException("El barbero no puede ser nulo");
+        }
+        this.barbero = barbero;
+    }
+
+    public void agregarServicio(Servicio servicio) {
+        if (servicio == null) {
+            throw new IllegalArgumentException("El servicio no puede ser nulo");
+        }
+        servicios.add(servicio);
     }
 
     // Devuelve una copia inmodificable de la lista de servicios
     public List<Servicio> getServicios() {
         return Collections.unmodifiableList(servicios);
+    }
+
+    @Override
+    public String toString() {
+        return "Reserva{" +
+               "id=" + idReserva +
+               ", fechaHora=" + fechaHora +
+               ", estado=" + estado +
+               ", clienteId=" + (cliente != null ? cliente.getId() : "N/A") + // Mostrar solo ID del cliente
+               ", barberoId=" + (barbero != null ? barbero.getId() : "N/A") + // Mostrar solo ID del barbero
+               ", numServicios=" + servicios.size() +
+               ", total=" + calcularTotal() +
+               '}';
     }
 }
