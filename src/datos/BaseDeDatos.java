@@ -5,20 +5,19 @@ import java.util.ArrayList; // Para usar la implementación ArrayList de las lis
 import java.util.List;     // Para declarar las variables como interfaces List
 
 // Descomentar y ajustar el paquete 'modelo' cuando tus compañeros provean estas clases
-// import modelo.Usuario;
-// import modelo.Barbero;
-// import modelo.Cliente;
-// import modelo.Horario;
-// import modelo.Reserva;
-// import modelo.Servicio;
-// import modelo.EstadoReserva; // Si es un enum, también debe ser Serializable si se guarda dentro de un objeto serializable
+import modelo.Usuario;
+import modelo.Barbero;
+import modelo.Cliente;
+import modelo.Horario;
+import modelo.Reserva;
+import modelo.Servicio;
+import modelo.EstadoReserva; // Si es un enum, también debe ser Serializable si se guarda dentro de un objeto serializable
 
 public class BaseDeDatos {
 
     // --- Rutas y nombres de archivos para la persistencia ---
     // Puedes definir una carpeta para los datos o dejarlos en la raíz del proyecto
     private static final String DATA_DIR = "data/"; // Crea una carpeta 'data' en la raíz de tu proyecto
-
     private static final String CLIENTES_FILE = DATA_DIR + "clientes.ser";
     private static final String BARBEROS_FILE = DATA_DIR + "barberos.ser";
     private static final String SERVICIOS_FILE = DATA_DIR + "servicios.ser";
@@ -30,11 +29,11 @@ public class BaseDeDatos {
     // --- Colecciones (listas) para almacenar los objetos en memoria ---
     // Temporalmente usamos 'Object' hasta que las clases del modelo estén disponibles.
     // Una vez disponibles, cambia 'Object' por el tipo específico (ej. List<Cliente>)
-    private List<Object> usuarios;
-    private List<Object> barberos;
-    private List<Object> clientes;
-    private List<Object> servicios;
-    private List<Object> reservas;
+    private List<Usuario> usuarios;
+    private List<Barbero> barberos;
+    private List<Cliente> clientes;
+    private List<Servicio> servicios;
+    private List<Reserva> reservas;
     // private List<Object> horarios; // No se usa si Horario está en Barbero
 
     // --- Contadores para generar IDs únicos (muy básico, para demo) ---
@@ -96,7 +95,7 @@ public class BaseDeDatos {
     public void cargarDatos() {
         System.out.println("DEBUG: Intentando cargar datos...");
         try (ObjectInputStream oisClientes = new ObjectInputStream(new FileInputStream(CLIENTES_FILE))) {
-            clientes = (List<Object>) oisClientes.readObject();
+            clientes = (List<Cliente>) oisClientes.readObject();
             System.out.println("DEBUG: Clientes cargados: " + clientes.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de clientes no encontrado. Iniciando con lista vacía.");
@@ -106,7 +105,7 @@ public class BaseDeDatos {
         }
 
         try (ObjectInputStream oisBarberos = new ObjectInputStream(new FileInputStream(BARBEROS_FILE))) {
-            barberos = (List<Object>) oisBarberos.readObject();
+            barberos = (List<Barbero>) oisBarberos.readObject();
             System.out.println("DEBUG: Barberos cargados: " + barberos.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de barberos no encontrado. Iniciando con lista vacía.");
@@ -116,7 +115,7 @@ public class BaseDeDatos {
         }
 
         try (ObjectInputStream oisServicios = new ObjectInputStream(new FileInputStream(SERVICIOS_FILE))) {
-            servicios = (List<Object>) oisServicios.readObject();
+            servicios = (List<Servicio>) oisServicios.readObject();
             System.out.println("DEBUG: Servicios cargados: " + servicios.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de servicios no encontrado. Iniciando con lista vacía.");
@@ -126,7 +125,7 @@ public class BaseDeDatos {
         }
 
         try (ObjectInputStream oisReservas = new ObjectInputStream(new FileInputStream(RESERVAS_FILE))) {
-            reservas = (List<Object>) oisReservas.readObject();
+            reservas = (List<Reserva>) oisReservas.readObject();
             System.out.println("DEBUG: Reservas cargadas: " + reservas.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de reservas no encontrado. Iniciando con lista vacía.");
@@ -136,7 +135,7 @@ public class BaseDeDatos {
         }
 
         try (ObjectInputStream oisUsuarios = new ObjectInputStream(new FileInputStream(USUARIOS_FILE))) {
-            usuarios = (List<Object>) oisUsuarios.readObject();
+            usuarios = (List<Usuario>) oisUsuarios.readObject();
             System.out.println("DEBUG: Usuarios cargados: " + usuarios.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de usuarios no encontrado. Iniciando con lista vacía.");
@@ -163,29 +162,67 @@ public class BaseDeDatos {
         if (!clientes.isEmpty()) {
             nextClienteId = clientes.stream()
                                     .mapToInt(obj -> {
-                                        // TODO: Cuando Cliente esté definido, castear a Cliente y obtener su ID.
-                                        // Cliente c = (Cliente) obj; return c.getId();
-                                        return 0; // Valor por defecto si no se puede obtener el ID real
+                                        Cliente clienteActual = (Cliente) obj;
+                                        return clienteActual.getId();
                                     })
                                     .max().orElse(0) + 1;
         }
-        // Repetir para barberos, servicios, reservas, usuarios
-        // ... (Este es un TODO importante para cuando las clases del modelo estén disponibles)
         System.out.println("DEBUG: nextClienteId establecido a: " + nextClienteId);
+
+        if (!barberos.isEmpty()) {
+            nextBarberoId = barberos.stream()
+                                    .mapToInt(obj -> {
+                                        Barbero barberoActual = (Barbero) obj;
+                                        return barberoActual.getId();
+                                    })
+                                    .max().orElse(0) + 1;
+        }
+        System.out.println("DEBUG: nextBarberoId establecido a: " + nextBarberoId);
+
+
+        if (!servicios.isEmpty()) {
+            nextServicioId = servicios.stream()
+                                    .mapToInt(obj -> {
+                                        Servicio servicioActual = (Servicio) obj;
+                                        return servicioActual.getId();
+                                    })
+                                    .max().orElse(0) + 1;
+        }
+        System.out.println("DEBUG: nextServicioId establecido a: " + nextServicioId);
+
+        if (!reservas.isEmpty()) {
+            nextReservaId = reservas.stream()
+                                    .mapToInt(obj -> {
+                                        Reserva reservaActual = (Reserva) obj;
+                                        return reservaActual.getIdReserva();
+                                    })
+                                    .max().orElse(0) + 1;
+        }
+        System.out.println("DEBUG: nextReservaId establecido a: " + nextReservaId);
+
+        if (!usuarios.isEmpty()) {
+            nextUsuarioId = usuarios.stream()
+                                    .mapToInt(obj -> {
+                                        Usuario usuarioActual = (Usuario) obj;
+                                        return usuarioActual.getId();
+                                    })
+                                    .max().orElse(0) + 1;
+        }
+        System.out.println("DEBUG: nextUsuarioId establecido a: " + nextUsuarioId);
+
     }
 
     // --- Métodos CRUD (Crear, Leer, Actualizar, Eliminar) ---
 
     // Métodos para USUARIO
-    public void agregarUsuario(Object usuario) { // Cambiar Object por Usuario cuando esté listo
-        // TODO: Cuando Usuario esté listo, asignarle el nextUsuarioId
-        // Usuario u = (Usuario) usuario; u.setId(nextUsuarioId++);
+    public void agregarUsuario(Usuario usuario) { 
+        usuario.setId(nextUsuarioId++);
         usuarios.add(usuario);
         guardarDatos(); // Guarda los datos después de cada cambio
         System.out.println("DEBUG: Usuario agregado. Total: " + usuarios.size());
     }
 
-    public List<Object> obtenerTodosLosUsuarios() { // Cambiar Object por Usuario cuando esté listo
+    public List<Usuario> obtenerTodosLosUsuarios() { 
         return usuarios;
     }
 
