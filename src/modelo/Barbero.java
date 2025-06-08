@@ -5,10 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 public class Barbero extends Usuario {
-
+    private static final long serialVersionUID = 1L;
     private List<String> especialidades;
     private List<Horario> horarioTrabajo;
     private String contrasena; 
+    private List<Servicio> servicios;
 
     // Constructor vacío por razones de deserialización
     public Barbero() {
@@ -23,6 +24,15 @@ public class Barbero extends Usuario {
         this.especialidades = new ArrayList<>();
         this.horarioTrabajo = new ArrayList<>();
         this.contrasena = contrasena; 
+        this.servicios = new ArrayList<>();
+    }
+
+    public List<Servicio> getServicios(){
+        return servicios;
+    }
+
+    public void setServicios(List<Servicio> servicios){
+        this.servicios = servicios;
     }
 
     public List<String> getEspecialidades() {
@@ -67,10 +77,18 @@ public class Barbero extends Usuario {
         horarioTrabajo.add(horario);
     }
 
+    public void agregarServicio(Servicio servicio) {
+    if (servicio == null) {
+        throw new IllegalArgumentException("El servicio no puede ser nulo.");
+    }
+    servicios.add(servicio);
+}
+
     @Override
     public void mostrarInformacion() {
         System.out.println("Barbero ID: " + getId() + ", Nombre: " + getNombre() + ", Teléfono: " + getTelefono() + ", Especialidades: " + especialidades + ", Contraseña: " + contrasena); // Muestra la contraseña para depuración, puedes quitarla en prod.
     }
+    
 
     @Override
     public String toString() {

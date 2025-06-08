@@ -1,374 +1,301 @@
 package app;
+
 import datos.BaseDeDatos;
 import modelo.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.InputMismatchException;
+//import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-    try {
-        // Inicializar la base de datos
-        BaseDeDatos baseDeDatos = new BaseDeDatos();
+        BaseDeDatos bd = new BaseDeDatos();
         Scanner scanner = new Scanner(System.in);
-        
-        System.out.println("Bienvenido al sistema de gestión de la barbería");
+        boolean continuar = true;
 
-        boolean salir = false;
-        while (!salir) {
-            System.out.println("\n Menú Principal:");
-            System.out.println("1. Gestionar Clientes");
-            System.out.println("2. Gestionar Barberos");
-            System.out.println("3. Gestionar Servicios");
-            System.out.println("4. Gestionar Reservas");
+        while (continuar) {
+            System.out.println("\n--- Gestión de Barbería ---");
+            System.out.println("1. Gestionar barberos");
+            System.out.println("2. Gestionar clientes");
+            System.out.println("3. Gestionar reservas");
+            System.out.println("4. Gestionar servicios");
             System.out.println("5. Salir");
             System.out.print("Selecciona una opción: ");
+            int opcion = scanner.nextInt();
+            scanner.nextLine();
 
-            try {
-                int opcion = scanner.nextInt();
-                scanner.nextLine(); // Limpiar buffer
-                
-                switch (opcion) {
-                    case 1:
-                        gestionarClientes(baseDeDatos, scanner);
-                        break;
-                    case 2:
-                        gestionarBarberos(baseDeDatos, scanner);
-                        break;
-                    case 3:
-                        gestionarServicios(baseDeDatos, scanner);
-                        break;
-                    case 4:
-                        gestionarReservas(baseDeDatos, scanner);
-                        break;
-                    case 5:
-                        salir = true;
-                        baseDeDatos.guardarDatos(); // Guardar cambios antes de salir
-                        System.out.println("¡Gracias por usar el sistema!");
-                        break;
-                    default:
-                        System.out.println("Opción no válida. Intenta de nuevo.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Error: Debes ingresar un número.");
-                scanner.nextLine(); // Limpiar el buffer
-            } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+            switch (opcion) {
+                case 1:
+                    gestionarBarberos(bd, scanner);
+                    break;
+                case 2:
+                    gestionarClientes(bd, scanner);
+                    break;
+                case 3:
+                    gestionarReservas(bd, scanner);
+                    break;
+                case 4:
+                    gestionarServicios(bd, scanner);
+                    break;
+                case 5:
+                    continuar = false;
+                    bd.guardarDatos();
+                    System.out.println("Saliendo y guardando datos...");
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intenta nuevamente.");
             }
         }
-
         scanner.close();
-    } catch (Exception e) {
-        System.out.println("Error grave al iniciar la aplicación: " + e.getMessage());
     }
-}
 
+    // Métodos para gestionar cada sección...
 
-    private static void gestionarClientes(BaseDeDatos baseDeDatos, Scanner scanner) {
-    System.out.println("\nGestión de Clientes:");
-    System.out.println("1. Agregar Cliente");
-    System.out.println("2. Listar Clientes");
-    System.out.println("3. Buscar Cliente");
-    System.out.println("4. Eliminar Cliente");
-    System.out.println("5. Volver al menú principal");
-    System.out.print("Selecciona una opción: ");
-
-    try {
-        int opcion = scanner.nextInt();
-        scanner.nextLine(); // Limpiar buffer
-        
-        switch (opcion) {
-            case 1:
-                System.out.print("Nombre: ");
-                String nombre = scanner.nextLine();
-                System.out.print("Teléfono: ");
-                String telefono = scanner.nextLine();
-                System.out.print("Email: ");
-                String email = scanner.nextLine();
-
-                if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-z]{2,6}$")) {
-                    throw new IllegalArgumentException("Email ingresado no es válido.");
-                }
-
-                Cliente nuevoCliente = new Cliente(0, nombre, telefono, email);
-                baseDeDatos.incrementarClienteId();
-                baseDeDatos.agregarCliente(nuevoCliente);
-                System.out.println("Cliente agregado correctamente.");
-                break;
-            case 2:
-
-                List<Cliente> clientes = baseDeDatos.obtenerTodosLosClientes();
-                for (Cliente cliente : clientes) {
-                    System.out.println(cliente);
-                    
-                    // 📌 Muestra cada reserva del historial del cliente
-                    if (!cliente.getHistorialReservas().isEmpty()) {
-                        System.out.println("Historial de Reservas:");
-                        cliente.getHistorialReservas().forEach(System.out::println);
-                    } else {
-                        System.out.println("Este cliente no tiene reservas.");
-                    }
-                }
-                break;
-
-            case 3:
-                System.out.print("ID del Cliente: ");
-                int idBuscar = scanner.nextInt();
-                Cliente clienteEncontrado = baseDeDatos.buscarClientePorId(idBuscar);
-                System.out.println(clienteEncontrado != null ? clienteEncontrado : "Cliente no encontrado.");
-                break;
-            case 4:
-                System.out.print("ID del Cliente a eliminar: ");
-                int idEliminar = scanner.nextInt();
-                if (baseDeDatos.eliminarCliente(idEliminar)) {
-                    System.out.println("Cliente eliminado.");
-                } else {
-                    System.out.println("No se encontró el cliente.");
-                }
-                break;
-            case 5:
-                return;
-            default:
-                System.out.println(" Opción no válida.");
-        }
-    } catch (InputMismatchException e) {
-        System.out.println("Error: Debes ingresar un número.");
-        scanner.nextLine();
-    } catch (IllegalArgumentException e) {
-        System.out.println(e.getMessage());
-    } catch (Exception e) {
-        System.out.println("Error inesperado: " + e.getMessage());
-    }
-}
-
-    private static final String CONTRASENA_MAESTRA = "barberia123"; 
-
-private static void gestionarBarberos(BaseDeDatos baseDeDatos, Scanner scanner) {
-    System.out.println("\nGestión de Barberos:");
-    System.out.println("1. Agregar Barbero");
-    System.out.println("2. Listar Barberos");
-    System.out.println("3. Buscar Barbero");
-    System.out.println("4. Eliminar Barbero");
-    System.out.println("5. Volver al menú principal");
-    System.out.print("Selecciona una opción: ");
-
-    try {
+    private static void gestionarBarberos(BaseDeDatos bd, Scanner scanner) {
+        System.out.println("\n--- Gestión de Barberos ---");
+        System.out.println("1. Agregar barbero");
+        System.out.println("2. Eliminar barbero");
+        System.out.println("3. Listar barberos");
+        System.out.println("4. Agregar horario a barbero");
+        System.out.println("5. Agregar servicio a barbero");
+        System.out.print("Selecciona una opción: ");
         int opcion = scanner.nextInt();
         scanner.nextLine();
 
         switch (opcion) {
             case 1:
-                System.out.print("Ingrese la contraseña de la barbería: ");
-                String contrasenaIngresada = scanner.nextLine();
-
-                if (!contrasenaIngresada.equals(CONTRASENA_MAESTRA)) {
-                    System.out.println("Acceso denegado. La contraseña es incorrecta.");
-                    return;
-                }
-
-                System.out.print("Nombre: ");
+                System.out.print("Nombre del barbero: ");
                 String nombre = scanner.nextLine();
-                System.out.print("Teléfono: ");
+                System.out.print("Teléfono del barbero: ");
                 String telefono = scanner.nextLine();
-                System.out.print("Contraseña personal: ");
-                String contrasenaPersonal = scanner.nextLine();
-
-                Barbero nuevoBarbero = new Barbero(0, nombre, telefono, contrasenaPersonal);
-                baseDeDatos.agregarBarbero(nuevoBarbero);
-                System.out.println("Barbero agregado correctamente.");
+                System.out.print("Contraseña del barbero: ");
+                String contrasena = scanner.nextLine();
+                Barbero nuevoBarbero = new Barbero(bd.getNextBarberoId(), nombre, telefono, contrasena);
+                bd.agregarBarbero(nuevoBarbero);
+                System.out.println("Barbero agregado con ID único.");
                 break;
-
             case 2:
-                List<Barbero> barberos = baseDeDatos.obtenerTodosLosBarberos();
-                barberos.forEach(System.out::println);
-                break;
-
-            case 3:
-                System.out.print("ID del Barbero: ");
-                int idBuscar = scanner.nextInt();
-                Barbero barberoEncontrado = baseDeDatos.buscarBarberoPorId(idBuscar);
-                System.out.println(barberoEncontrado != null ? barberoEncontrado : "Barbero no encontrado.");
-                break;
-
-            case 4:
-                System.out.print("ID del Barbero a eliminar: ");
+                System.out.print("ID del barbero a eliminar: ");
                 int idEliminar = scanner.nextInt();
-                if (baseDeDatos.eliminarBarbero(idEliminar)) {
+                if (bd.eliminarBarbero(idEliminar)) {
                     System.out.println("Barbero eliminado.");
                 } else {
                     System.out.println("No se encontró el barbero.");
                 }
                 break;
-
-            case 5:
-                return;
-
-            default:
-                System.out.println("Opción no válida.");
-        }
-    } catch (InputMismatchException e) {
-        System.out.println("Error: Debes ingresar un número.");
-        scanner.nextLine();
-    } catch (Exception e) {
-        System.out.println("Error inesperado: " + e.getMessage());
-    }
-}
-
-
-private static void gestionarServicios(BaseDeDatos baseDedatos, Scanner scanner) {
-    System.out.println("\nGestión de Servicios:");
-    System.out.println("1. Agregar Servicio");
-    System.out.println("2. Listar Servicios");
-    System.out.println("3. Buscar Servicio");
-    System.out.println("4. Eliminar Servicio");
-    System.out.println("5. Volver al menú principal");
-    System.out.print("Selecciona una opción: ");
-
-    try {
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (opcion) {
-            case 1:
-                System.out.print("Nombre del servicio: ");
-                String nombre = scanner.nextLine();
-                System.out.print("Descripción: ");
-                String descripcion = scanner.nextLine();
-                System.out.print("Precio: ");
-                double precio = scanner.nextDouble();
-                System.out.print("Duración en minutos: ");
-                int duracion = scanner.nextInt();
-                scanner.nextLine();
-
-                if (precio < 0) {
-                    throw new IllegalArgumentException("El precio no puede ser negativo.");
-                }
-                if (duracion <= 0) {
-                    throw new IllegalArgumentException("La duración debe ser mayor a cero.");
-                }
-
-                Servicio nuevoServicio = new Servicio(0, nombre, descripcion, precio, duracion);
-                baseDedatos.incrementarServicioId();
-                baseDedatos.agregarServicio(nuevoServicio);
-                System.out.println("Servicio agregado correctamente.");
-                break;
-            case 2:
-                List<Servicio> servicios = baseDedatos.obtenerTodosLosServicios();
-                servicios.forEach(System.out::println);
-                break;
             case 3:
-                System.out.print("ID del Servicio: ");
-                int idBuscar = scanner.nextInt();
-                Servicio servicioEncontrado = baseDedatos.buscarServicioPorId(idBuscar);
-                System.out.println(servicioEncontrado != null ? servicioEncontrado : "❌ Servicio no encontrado.");
+                List<Barbero> barberos = bd.obtenerTodosLosBarberos();
+                barberos.forEach(System.out::println);
                 break;
             case 4:
-                System.out.print("ID del Servicio a eliminar: ");
-                int idEliminar = scanner.nextInt();
-                if (baseDedatos.eliminarServicio(idEliminar)) {
-                    System.out.println("Servicio eliminado.");
+                System.out.print("ID del barbero al que quieres agregar horario: ");
+                int idBarberoHorario = scanner.nextInt();
+                scanner.nextLine();
+                System.out.print("Fecha (YYYY-MM-DD): ");
+                String fechaStr = scanner.nextLine();
+                System.out.print("Hora inicio (HH:mm AM/PM): ");
+                String horaInicio = scanner.nextLine();
+                System.out.print("Hora fin (HH:mm AM/PM): ");
+                String horaFin = scanner.nextLine();
+                Horario nuevoHorario = new Horario(java.sql.Date.valueOf(fechaStr), horaInicio, horaFin);
+                Barbero barbero = bd.buscarBarberoPorId(idBarberoHorario);
+                if (barbero != null) {
+                    barbero.agregarHorario(nuevoHorario);
+                    System.out.println("Horario agregado.");
                 } else {
-                    System.out.println("No se encontró el servicio.");
+                    System.out.println("Barbero no encontrado.");
                 }
                 break;
             case 5:
-                return;
+                System.out.print("ID del barbero al que quieres agregar servicio: ");
+                int idBarberoServicio = scanner.nextInt();
+                scanner.nextLine();
+                System.out.print("Nombre del servicio: ");
+                String nombreServicio = scanner.nextLine();
+                System.out.print("Descripción del servicio: ");
+                String descServicio = scanner.nextLine();
+                System.out.print("Precio del servicio: ");
+                double precioServicio = scanner.nextDouble();
+                System.out.print("Duración en minutos: ");
+                int duracionServicio = scanner.nextInt();
+                Servicio nuevoServicio = new Servicio(bd.getNextServicioId(), nombreServicio, descServicio, precioServicio, duracionServicio);
+                Barbero barberoServicio = bd.buscarBarberoPorId(idBarberoServicio);
+                if (barberoServicio != null) {
+                    barberoServicio.agregarServicio(nuevoServicio); // Agrega el servicio al barbero
+                    bd.agregarServicio(nuevoServicio); // ✅ También almacénalo en la base de datos
+                    bd.guardarDatos(); // 🔥 Persistencia asegurada
+                    System.out.println("Servicio agregado correctamente y guardado.");
+                } else {
+                    System.out.println("Barbero no encontrado.");
+                }
+
+                break;
             default:
                 System.out.println("Opción no válida.");
         }
-    } catch (InputMismatchException e) {
-        System.out.println("Error: Debes ingresar un número.");
-        scanner.nextLine();
-    } catch (IllegalArgumentException e) {
-        System.out.println(e.getMessage());
-    } catch (Exception e) {
-        System.out.println("Error inesperado: " + e.getMessage());
     }
-}
 
-private static void gestionarReservas(BaseDeDatos baseDeDatos, Scanner scanner) {
-    System.out.println("\nGestión de Reservas:");
-    System.out.println("1. Agregar Reserva");
-    System.out.println("2. Listar Reservas");
-    System.out.println("3. Buscar Reserva");
-    System.out.println("4. Eliminar Reserva");
-    System.out.println("5. Volver al menú principal");
-    System.out.print("Selecciona una opción: ");
-
-    try {
+    private static void gestionarClientes(BaseDeDatos bd, Scanner scanner) {
+        System.out.println("\n--- Gestión de Clientes ---");
+        System.out.println("1. Agregar cliente");
+        System.out.println("2. Eliminar cliente");
+        System.out.println("3. Listar clientes");
+        System.out.print("Selecciona una opción: ");
         int opcion = scanner.nextInt();
-        scanner.nextLine(); 
+        scanner.nextLine();
 
         switch (opcion) {
             case 1:
-                System.out.print("ID del Cliente: ");
+                System.out.print("Nombre del cliente: ");
+                String nombre = scanner.nextLine();
+                System.out.print("Teléfono del cliente: ");
+                String telefono = scanner.nextLine();
+                System.out.print("Email del cliente: ");
+                String email = scanner.nextLine();
+                Cliente nuevoCliente = new Cliente(bd.getNextClienteId(), nombre, telefono, email);
+                bd.agregarCliente(nuevoCliente);
+                System.out.println("Cliente agregado con éxito.");
+                break;
+            case 2:
+                System.out.print("ID del cliente a eliminar: ");
+                int idEliminar = scanner.nextInt();
+                if (bd.eliminarCliente(idEliminar)) {
+                    System.out.println("Cliente eliminado.");
+                } else {
+                    System.out.println("No se encontró el cliente.");
+                }
+                break;
+            case 3:
+                List<Cliente> clientes = bd.obtenerTodosLosClientes();
+                clientes.forEach(System.out::println);
+                break;
+            default:
+                System.out.println("Opción no válida.");
+        }
+    }
+
+    private static void gestionarReservas(BaseDeDatos bd, Scanner scanner) {
+        System.out.println("\n--- Gestión de Reservas ---");
+        System.out.println("1. Hacer reserva");
+        System.out.println("2. Listar reservas");
+        System.out.println("3. Eliminar reserva");
+        System.out.print("Selecciona una opción: ");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcion) {
+            case 1:
+                System.out.print("ID del cliente que hace la reserva: ");
                 int idCliente = scanner.nextInt();
-                Cliente cliente = baseDeDatos.buscarClientePorId(idCliente);
+                Cliente cliente = bd.buscarClientePorId(idCliente);
                 if (cliente == null) {
                     System.out.println("Cliente no encontrado.");
                     return;
                 }
 
-                scanner.nextLine(); // Limpiar buffer
-                System.out.print("Fecha y hora (YYYY-MM-DD HH:mm): ");
-                String fechaHoraStr = scanner.nextLine().trim(); // Elimina espacios innecesarios
-
-                try {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                    LocalDateTime fechaHora = LocalDateTime.parse(fechaHoraStr, formatter);
- 
-                    int nuevoIdReserva = baseDeDatos.getNextReservaId(); // Obtener el próximo ID válido
-                    System.out.println("DEBUG: ID de nueva reserva -> " + nuevoIdReserva); // Para verificar el valor
-                    Reserva nuevaReserva = new Reserva(baseDeDatos.getNextReservaId(), fechaHora, cliente);
-                    cliente.agregarReserva(nuevaReserva);  // ✅ Agrega la reserva al historial del cliente
-                    baseDeDatos.agregarReserva(nuevaReserva);  // ✅ Guarda la reserva en la base de datos
-                    baseDeDatos.actualizarCliente(cliente); // ✅ Asegura que el historial de reservas se guarde
-                    System.out.println("✅ Reserva creada correctamente.");
-
-                } catch (DateTimeParseException e) {
-                    System.out.println("Error en el formato de fecha. Usa estrictamente: YYYY-MM-DD HH:mm (Ejemplo: 2025-06-07 02:30).");
+                System.out.print("ID del barbero: ");
+                int idBarbero = scanner.nextInt();
+                Barbero barbero = bd.buscarBarberoPorId(idBarbero);
+                if (barbero == null) {
+                    System.out.println("Barbero no encontrado.");
+                    return;
                 }
-                break;
 
+                System.out.print("Fecha y hora de la reserva (YYYY-MM-DD HH:mm): ");
+                scanner.nextLine();
+                String fechaHoraStr = scanner.nextLine();
+                LocalDateTime fechaHora = LocalDateTime.parse(fechaHoraStr.replace(" ", "T"));
+
+                Reserva nuevaReserva = new Reserva(bd.getNextReservaId(), fechaHora, cliente);
+                nuevaReserva.asignarBarbero(barbero);
+
+                System.out.print("ID del servicio: ");
+                int idServicio = scanner.nextInt();
+                Servicio servicio = bd.buscarServicioPorId(idServicio);
+                if (servicio != null) {
+                    nuevaReserva.agregarServicio(servicio);
+                } else {
+                    System.out.println("Servicio no encontrado.");
+                    return;
+                }
+
+                barbero.getHorarioTrabajo().forEach(horario -> {
+                    if (horario.getFecha().equals(java.sql.Date.valueOf(fechaHora.toLocalDate()))) {
+                        horario.marcarComoOcupado();
+                    }
+                });
+
+                bd.agregarReserva(nuevaReserva);
+                cliente.agregarReserva(nuevaReserva); // 🔥 Asegura que el historial del cliente se actualiza
+                bd.guardarDatos(); // 💾 Guarda los datos para que persistan
+                System.out.println("Reserva agregada al historial del cliente.");
+                System.out.println("Reserva creada con éxito.");
+                break;
             case 2:
-                List<Reserva> reservas = baseDeDatos.obtenerTodasLasReservas();
+                List<Reserva> reservas = bd.obtenerTodasLasReservas();
                 reservas.forEach(System.out::println);
                 break;
-
             case 3:
-                System.out.print("ID de la Reserva: ");
-                int idBuscar = scanner.nextInt();
-                Reserva reservaEncontrada = baseDeDatos.buscarReservaPorId(idBuscar);
-                System.out.println(reservaEncontrada != null ? reservaEncontrada : "Reserva no encontrada.");
-                break;
-
-            case 4:
-                System.out.print("ID de la Reserva a eliminar: ");
-                int idEliminar = scanner.nextInt();
-                if (baseDeDatos.eliminarReserva(idEliminar)) {
+                System.out.print("ID de la reserva a eliminar: ");
+                int idReserva = scanner.nextInt();
+                if (bd.eliminarReserva(idReserva)) {
                     System.out.println("Reserva eliminada.");
                 } else {
                     System.out.println("No se encontró la reserva.");
                 }
                 break;
-
-            case 5:
-                return;
-
             default:
                 System.out.println("Opción no válida.");
         }
+    }
 
-    } catch (InputMismatchException e) {
-        System.out.println("Error: Debes ingresar un número.");
-        scanner.nextLine(); // Limpiar el buffer
-    } catch (Exception e) {
-        System.out.println("Error inesperado: " + e.getMessage());
+    private static void gestionarServicios(BaseDeDatos bd, Scanner scanner) {
+    System.out.println("\n--- Gestión de Servicios ---");
+    System.out.println("1. Agregar servicio a barbero");
+    System.out.println("2. Listar servicios");
+    System.out.print("Selecciona una opción: ");
+    int opcion = scanner.nextInt();
+    scanner.nextLine();
+
+    switch (opcion) {
+        case 1:
+            System.out.print("ID del barbero al que quieres agregar servicio: ");
+            int idBarberoServicio = scanner.nextInt();
+            scanner.nextLine();
+            System.out.print("Nombre del servicio: ");
+            String nombreServicio = scanner.nextLine();
+            System.out.print("Descripción del servicio: ");
+            String descServicio = scanner.nextLine();
+            System.out.print("Precio del servicio: ");
+            double precioServicio = scanner.nextDouble();
+            System.out.print("Duración en minutos: ");
+            int duracionServicio = scanner.nextInt();
+
+            Servicio nuevoServicio = new Servicio(bd.getNextServicioId(), nombreServicio, descServicio, precioServicio, duracionServicio);
+            Barbero barbero = bd.buscarBarberoPorId(idBarberoServicio);
+            if (barbero != null) {
+                barbero.agregarServicio(nuevoServicio);
+                bd.agregarServicio(nuevoServicio); // 💡 También guardarlo en la base de datos general
+                bd.guardarDatos(); // 🔥 Asegurar la persistencia
+                System.out.println("Servicio agregado correctamente y guardado.");
+            } else {
+                System.out.println("Barbero no encontrado.");
+            }
+
+            break;
+        case 2:
+            List<Servicio> servicios = bd.obtenerTodosLosServicios();
+            servicios.forEach(System.out::println);
+            break;
+        default:
+            System.out.println("Opción no válida.");
     }
 }
 
+
+
+    // Métodos para gestionar clientes, reservas y servicios siguen el mismo patrón...
+
 }
+

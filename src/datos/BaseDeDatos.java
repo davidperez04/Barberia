@@ -34,6 +34,14 @@ public class BaseDeDatos implements Serializable {
     private int nextReservaId = 1;
     private int nextUsuarioId = 1;
 
+    public int getNextBarberoId(){
+        return nextBarberoId;
+    }
+
+    public void incrementarBarberoId(){
+        nextBarberoId++;
+    }
+
     public int getNextReservaId() {
     return nextReservaId;
     }
@@ -329,20 +337,41 @@ public class BaseDeDatos implements Serializable {
     }
 
 
-    public List<Servicio> obtenerTodosLosServicios() { 
-        return servicios; 
+    public List<Servicio> obtenerTodosLosServicios() {
+    List<Servicio> listaServicios = new ArrayList<>(servicios); // Servicios generales
+
+    // 🔥 Revisar los barberos y añadir sus servicios
+    for (Barbero barbero : barberos) {
+        listaServicios.addAll(barbero.getServicios());
     }
 
-    public Servicio buscarServicioPorId(int id) { 
+    return listaServicios;
+}
+
+
+   public Servicio buscarServicioPorId(int id) { 
+        // Buscar en la lista general
         for (Servicio servicioActual : servicios) { 
             if (servicioActual.getId() == id) {
-                System.out.println("DEBUG: Servicio con ID " + id + " encontrado.");
+                System.out.println("DEBUG: Servicio con ID " + id + " encontrado en lista general.");
                 return servicioActual;
             }
         }
+
+        // Buscar en los servicios asignados a cada barbero
+        for (Barbero barbero : barberos) {
+            for (Servicio servicio : barbero.getServicios()) {
+                if (servicio.getId() == id) {
+                    System.out.println("DEBUG: Servicio con ID " + id + " encontrado en barbero.");
+                    return servicio;
+                }
+            }
+        }
+
         System.out.println("DEBUG: Servicio con ID " + id + " no encontrado.");
         return null;
     }
+
 
     public boolean eliminarServicio(int id) {
         boolean removed = servicios.removeIf(servicioActual -> servicioActual.getId() == id);

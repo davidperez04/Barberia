@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Reserva implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int idReserva;
     private LocalDateTime fechaHora;
     private EstadoReserva estado;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente extends Usuario{
-
+    private static final long serialVersionUID = 1L;
     private String email;
     private List<Reserva> historialReservas;
 
