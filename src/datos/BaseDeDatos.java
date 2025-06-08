@@ -1,70 +1,82 @@
-package datos; // Asegúrate de que este sea el paquete correcto para tu clase BaseDeDatos
+package datos; 
 
-import java.io.*;          // Para manejo de archivos y serialización (FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream)
-import java.util.ArrayList; // Para usar la implementación ArrayList de las listas
-import java.util.List;     // Para declarar las variables como interfaces List
+import java.io.*;
+import java.util.ArrayList; 
+import java.util.List;
 
-// Descomentar y ajustar el paquete 'modelo' cuando tus compañeros provean estas clases
 import modelo.Usuario;
 import modelo.Barbero;
 import modelo.Cliente;
-import modelo.Horario;
 import modelo.Reserva;
 import modelo.Servicio;
-import modelo.EstadoReserva; // Si es un enum, también debe ser Serializable si se guarda dentro de un objeto serializable
 
-public class BaseDeDatos {
+public class BaseDeDatos implements Serializable {
 
-    // --- Rutas y nombres de archivos para la persistencia ---
-    // Puedes definir una carpeta para los datos o dejarlos en la raíz del proyecto
-    private static final String DATA_DIR = "data/"; // Crea una carpeta 'data' en la raíz de tu proyecto
+    // Rutas y nombres de archivos para la persistencia 
+    private static final String DATA_DIR = "data/"; 
     private static final String CLIENTES_FILE = DATA_DIR + "clientes.ser";
     private static final String BARBEROS_FILE = DATA_DIR + "barberos.ser";
     private static final String SERVICIOS_FILE = DATA_DIR + "servicios.ser";
     private static final String RESERVAS_FILE = DATA_DIR + "reservas.ser";
     private static final String USUARIOS_FILE = DATA_DIR + "usuarios.ser";
-    // Según el UML, los Horarios se manejan por Barbero, no centralmente en BaseDeDatos.
-    // private static final String HORARIOS_FILE = DATA_DIR + "horarios.ser"; // No se usa si Horario está en Barbero
 
-    // --- Colecciones (listas) para almacenar los objetos en memoria ---
-    // Temporalmente usamos 'Object' hasta que las clases del modelo estén disponibles.
-    // Una vez disponibles, cambia 'Object' por el tipo específico (ej. List<Cliente>)
+    //Colecciones (listas) para almacenar los objetos en memoria 
     private List<Usuario> usuarios;
     private List<Barbero> barberos;
     private List<Cliente> clientes;
     private List<Servicio> servicios;
     private List<Reserva> reservas;
-    // private List<Object> horarios; // No se usa si Horario está en Barbero
 
-    // --- Contadores para generar IDs únicos (muy básico, para demo) ---
-    //esto asegura que se le agregue un id unico y conse cutivo a cada objeto, al cliente1 se le asigna uno y al dos 2 y asi 
+    // Contadores para generar IDs únicos 
     private int nextClienteId = 1;
     private int nextBarberoId = 1;
-    private int nextServicioId = 1;
+    private int nextServicioId = 3;
     private int nextReservaId = 1;
     private int nextUsuarioId = 1;
 
+    public int getNextReservaId() {
+    return nextReservaId;
+    }
+
+    public void incrementarReservaId() {
+        nextReservaId++;
+    }
+
+    public int getNextClienteId(){
+        return nextClienteId;
+    }
+
+    public void incrementarClienteId(){
+        nextClienteId++;
+    }
+
+      public int getNextServicioId(){
+        return nextServicioId;
+    }
+
+    public void incrementarServicioId(){
+        nextServicioId++;
+    }
+
+
 
     public BaseDeDatos() {
-        // Inicializa las listas al crear una instancia de BaseDeDatos
+        
         this.usuarios = new ArrayList<>();
         this.barberos = new ArrayList<>();
         this.clientes = new ArrayList<>();
         this.servicios = new ArrayList<>();
         this.reservas = new ArrayList<>();
-        // this.horarios = new ArrayList<>(); // Si no se maneja centralmente
 
-        // Asegura que la carpeta 'data' exista
         File dataFolder = new File(DATA_DIR);
         if (!dataFolder.exists()) {
-            dataFolder.mkdirs(); // Crea la carpeta y cualquier carpeta padre necesaria
+            dataFolder.mkdirs(); 
         }
 
-        // Intenta cargar los datos persistidos al iniciar la aplicación
         cargarDatos();
     }
 
-    // --- Métodos de Serialización (Guardar datos en archivos .ser) ---
+    //Métodos de Serialización
 
     public void guardarDatos() {
         try (ObjectOutputStream oosClientes = new ObjectOutputStream(new FileOutputStream(CLIENTES_FILE));
@@ -78,8 +90,6 @@ public class BaseDeDatos {
             oosServicios.writeObject(servicios);
             oosReservas.writeObject(reservas);
             oosUsuarios.writeObject(usuarios);
-            // Si tuvieras Horarios centralizados, también iría aquí:
-            // oosHorarios.writeObject(horarios);
 
             System.out.println("DEBUG: Datos guardados exitosamente.");
         } catch (IOException e) {
@@ -88,15 +98,14 @@ public class BaseDeDatos {
         }
     }
 
-    // --- Métodos de Deserialización (Cargar datos desde archivos .ser) ---
+    //Métodos de Deserialización
 
-    // La anotación suprime advertencias del compilador sobre el casting genérico
     @SuppressWarnings("unchecked")
     public void cargarDatos() {
-        System.out.println("DEBUG: Intentando cargar datos...");
+        //System.out.println("DEBUG: Intentando cargar datos...");
         try (ObjectInputStream oisClientes = new ObjectInputStream(new FileInputStream(CLIENTES_FILE))) {
             clientes = (List<Cliente>) oisClientes.readObject();
-            System.out.println("DEBUG: Clientes cargados: " + clientes.size());
+            //System.out.println("DEBUG: Clientes cargados: " + clientes.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de clientes no encontrado. Iniciando con lista vacía.");
         } catch (IOException | ClassNotFoundException e) {
@@ -106,7 +115,7 @@ public class BaseDeDatos {
 
         try (ObjectInputStream oisBarberos = new ObjectInputStream(new FileInputStream(BARBEROS_FILE))) {
             barberos = (List<Barbero>) oisBarberos.readObject();
-            System.out.println("DEBUG: Barberos cargados: " + barberos.size());
+            //System.out.println("DEBUG: Barberos cargados: " + barberos.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de barberos no encontrado. Iniciando con lista vacía.");
         } catch (IOException | ClassNotFoundException e) {
@@ -116,7 +125,7 @@ public class BaseDeDatos {
 
         try (ObjectInputStream oisServicios = new ObjectInputStream(new FileInputStream(SERVICIOS_FILE))) {
             servicios = (List<Servicio>) oisServicios.readObject();
-            System.out.println("DEBUG: Servicios cargados: " + servicios.size());
+            //System.out.println("DEBUG: Servicios cargados: " + servicios.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de servicios no encontrado. Iniciando con lista vacía.");
         } catch (IOException | ClassNotFoundException e) {
@@ -126,7 +135,7 @@ public class BaseDeDatos {
 
         try (ObjectInputStream oisReservas = new ObjectInputStream(new FileInputStream(RESERVAS_FILE))) {
             reservas = (List<Reserva>) oisReservas.readObject();
-            System.out.println("DEBUG: Reservas cargadas: " + reservas.size());
+            //System.out.println("DEBUG: Reservas cargadas: " + reservas.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de reservas no encontrado. Iniciando con lista vacía.");
         } catch (IOException | ClassNotFoundException e) {
@@ -136,7 +145,7 @@ public class BaseDeDatos {
 
         try (ObjectInputStream oisUsuarios = new ObjectInputStream(new FileInputStream(USUARIOS_FILE))) {
             usuarios = (List<Usuario>) oisUsuarios.readObject();
-            System.out.println("DEBUG: Usuarios cargados: " + usuarios.size());
+            //System.out.println("DEBUG: Usuarios cargados: " + usuarios.size());
         } catch (FileNotFoundException e) {
             System.out.println("INFO: Archivo de usuarios no encontrado. Iniciando con lista vacía.");
         } catch (IOException | ClassNotFoundException e) {
@@ -144,30 +153,13 @@ public class BaseDeDatos {
             // e.printStackTrace();
         }
 
-        // Si tuvieras Horarios centralizados, también iría aquí:
-        /*
-        try (ObjectInputStream oisHorarios = new ObjectInputStream(new FileInputStream(HORARIOS_FILE))) {
-            horarios = (List<Object>) oisHorarios.readObject();
-            System.out.println("DEBUG: Horarios cargados: " + horarios.size());
-        } catch (FileNotFoundException e) {
-            System.out.println("INFO: Archivo de horarios no encontrado. Iniciando con lista vacía.");
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("ERROR: Error al cargar horarios: " + e.getMessage());
-            // e.printStackTrace();
+         if (!clientes.isEmpty()) {
+                nextClienteId = clientes.stream()
+                                        .mapToInt(Cliente::getId)
+                                        .max()
+                                        .orElse(0) + 1;
         }
-        */
-
-        // Lógica para establecer los nextId a partir de los IDs más altos cargados
-        // Esto es crucial para evitar IDs duplicados después de cargar datos
-        if (!clientes.isEmpty()) {
-            nextClienteId = clientes.stream()
-                                    .mapToInt(obj -> {
-                                        Cliente clienteActual = (Cliente) obj;
-                                        return clienteActual.getId();
-                                    })
-                                    .max().orElse(0) + 1;
-        }
-        System.out.println("DEBUG: nextClienteId establecido a: " + nextClienteId);
+        //System.out.println("DEBUG: nextClienteId establecido a: " + nextClienteId);
 
         if (!barberos.isEmpty()) {
             nextBarberoId = barberos.stream()
@@ -177,7 +169,7 @@ public class BaseDeDatos {
                                     })
                                     .max().orElse(0) + 1;
         }
-        System.out.println("DEBUG: nextBarberoId establecido a: " + nextBarberoId);
+        //System.out.println("DEBUG: nextBarberoId establecido a: " + nextBarberoId);
 
 
         if (!servicios.isEmpty()) {
@@ -188,7 +180,7 @@ public class BaseDeDatos {
                                     })
                                     .max().orElse(0) + 1;
         }
-        System.out.println("DEBUG: nextServicioId establecido a: " + nextServicioId);
+        //System.out.println("DEBUG: nextServicioId establecido a: " + nextServicioId);
 
         if (!reservas.isEmpty()) {
             nextReservaId = reservas.stream()
@@ -198,7 +190,7 @@ public class BaseDeDatos {
                                     })
                                     .max().orElse(0) + 1;
         }
-        System.out.println("DEBUG: nextReservaId establecido a: " + nextReservaId);
+        //System.out.println("DEBUG: nextReservaId establecido a: " + nextReservaId);
 
         if (!usuarios.isEmpty()) {
             nextUsuarioId = usuarios.stream()
@@ -208,17 +200,17 @@ public class BaseDeDatos {
                                     })
                                     .max().orElse(0) + 1;
         }
-        System.out.println("DEBUG: nextUsuarioId establecido a: " + nextUsuarioId);
+        //System.out.println("DEBUG: nextUsuarioId establecido a: " + nextUsuarioId);
 
     }
 
-    // --- Métodos CRUD (Crear, Leer, Actualizar, Eliminar) ---
+    //Métodos CRUD
 
     // Métodos para USUARIO
     public void agregarUsuario(Usuario usuario) { 
         usuario.setId(nextUsuarioId++);
         usuarios.add(usuario);
-        guardarDatos(); // Guarda los datos después de cada cambio
+        guardarDatos();
         System.out.println("DEBUG: Usuario agregado. Total: " + usuarios.size());
     }
 
@@ -226,128 +218,177 @@ public class BaseDeDatos {
         return usuarios;
     }
 
-    public Object buscarUsuarioPorId(int id) { // Cambiar Object por Usuario cuando esté listo
-        for (Object obj : usuarios) {
-            // TODO: Cuando Usuario esté listo, castear y comparar su ID
-            // Usuario u = (Usuario) obj; if (u.getId() == id) return u;
+    public Usuario buscarUsuarioPorId(int id) { 
+        for (Usuario usuarioActual : usuarios) {
+            if (usuarioActual.getId() == id){
+                return usuarioActual;
+            } 
         }
         System.out.println("DEBUG: Usuario con ID " + id + " no encontrado.");
         return null;
     }
 
     public boolean eliminarUsuario(int id) {
-        // TODO: Implementar lógica de eliminación usando el ID real
-        // boolean removed = usuarios.removeIf(obj -> ((Usuario)obj).getId() == id);
-        // if (removed) guardarDatos();
-        System.out.println("DEBUG: Intento de eliminar Usuario con ID " + id);
-        return false; // Por ahora, siempre retorna false
+        boolean removed = usuarios.removeIf(usuarioActual -> usuarioActual.getId() == id);
+        if (removed) {
+            guardarDatos(); 
+            System.out.println("DEBUG: Usuario con ID " + id + " eliminado.");
+        } else {
+            System.out.println("DEBUG: Usuario con ID " + id + " no encontrado para eliminar.");
+        }
+        return removed;
     }
 
-    // Métodos para CLIENTE (Estructura similar a Usuario)
-    public void agregarCliente(Object cliente) { // Cambiar Object por Cliente
-        // TODO: Cuando Cliente esté listo, asignar ID: Cliente c = (Cliente) cliente; c.setId(nextClienteId++);
-        clientes.add(cliente);
-        guardarDatos();
-        System.out.println("DEBUG: Cliente agregado. Total: " + clientes.size());
+    // Métodos para CLIENTE 
+    public void agregarCliente(Cliente nuevoCliente) {
+        nuevoCliente.setId(nextClienteId);  // ✅ Asigna un ID único al cliente
+        clientes.add(nuevoCliente);
+        nextClienteId++;  // ✅ Incrementa el contador
+        guardarDatos();   // ✅ Guarda los datos actualizados
     }
 
-    public List<Object> obtenerTodosLosClientes() { // Cambiar Object por Cliente
+
+    public List<Cliente> obtenerTodosLosClientes() { 
         return clientes;
     }
 
-    public Object buscarClientePorId(int id) { // Cambiar Object por Cliente
-        for (Object obj : clientes) {
-            // TODO: Castear a Cliente y comparar su ID
+    public Cliente buscarClientePorId(int id) {
+        for (Cliente clienteActual : clientes) { 
+            if (clienteActual.getId() == id) {
+                System.out.println("DEBUG: Cliente con ID " + id + " encontrado.");
+                return clienteActual;
+            }
         }
+        System.out.println("DEBUG: Cliente con ID " + id + " no encontrado.");
         return null;
-    }
+    }  
 
     public boolean eliminarCliente(int id) {
-        // TODO: Lógica de eliminación
-        return false;
+        boolean removed = clientes.removeIf(clienteActual -> clienteActual.getId() == id);
+        if (removed) {
+            guardarDatos(); 
+            System.out.println("DEBUG: Cliente con ID " + id + " eliminado.");
+        } else {
+            System.out.println("DEBUG: Cliente con ID " + id + " no encontrado para eliminar.");
+        }
+        return removed; 
     }
 
-    // Métodos para BARBERO (Estructura similar)
-    public void agregarBarbero(Object barbero) { // Cambiar Object por Barbero
-        // TODO: Asignar ID
+    public void actualizarCliente(Cliente clienteActualizado) {
+    for (int i = 0; i < clientes.size(); i++) {
+        if (clientes.get(i).getId() == clienteActualizado.getId()) {
+            clientes.set(i, clienteActualizado); // ✅ Reemplaza el cliente con sus nuevas reservas
+            guardarDatos(); // ✅ Asegura que los datos se guarden en los archivos
+            return;
+        }
+    }
+    System.out.println("❌ Cliente no encontrado en la base de datos.");
+}
+
+
+    // Métodos para BARBERO 
+    public void agregarBarbero(Barbero barbero) { 
+        barbero.setId(nextBarberoId++);
         barberos.add(barbero);
         guardarDatos();
         System.out.println("DEBUG: Barbero agregado. Total: " + barberos.size());
     }
 
-    public List<Object> obtenerTodosLosBarberos() { // Cambiar Object por Barbero
+    public List<Barbero> obtenerTodosLosBarberos() { 
         return barberos;
     }
 
-    public Object buscarBarberoPorId(int id) { // Cambiar Object por Barbero
-        for (Object obj : barberos) {
-            // TODO: Castear a Barbero y comparar su ID
+    public Barbero buscarBarberoPorId(int id) {
+        for (Barbero barberoActual : barberos) { 
+            if (barberoActual.getId() == id) {
+                System.out.println("DEBUG: Barbero con ID " + id + " encontrado.");
+                return barberoActual;
+            }
         }
+        System.out.println("DEBUG: Barbero con ID " + id + " no encontrado.");
         return null;
     }
 
-    public boolean eliminarBarbero(int id) {
-        // TODO: Lógica de eliminación
-        return false;
-    }
-
-    // Métodos para SERVICIO (Estructura similar)
-    public void agregarServicio(Object servicio) { // Cambiar Object por Servicio
-        // TODO: Asignar ID
-        servicios.add(servicio);
-        guardarDatos();
-        System.out.println("DEBUG: Servicio agregado. Total: " + servicios.size());
-    }
-
-    public List<Object> obtenerTodosLosServicios() { // Cambiar Object por Servicio
-        return servicios;
-    }
-
-    public Object buscarServicioPorId(int id) { // Cambiar Object por Servicio
-        for (Object obj : servicios) {
-            // TODO: Castear a Servicio y comparar su ID
+   public boolean eliminarBarbero(int id) {
+        boolean removed = barberos.removeIf(barberoActual -> barberoActual.getId() == id);
+        if (removed) {
+            guardarDatos();
+            System.out.println("DEBUG: Barbero con ID " + id + " eliminado.");
+        } else {
+            System.out.println("DEBUG: Barbero con ID " + id + " no encontrado para eliminar.");
         }
+        return removed;
+    }
+
+    // Métodos para SERVICIO
+    public void agregarServicio(Servicio servicio) { 
+        servicio.setId(getNextServicioId());  // ✅ Asigna un ID único
+        servicios.add(servicio);
+        incrementarServicioId();  // ✅ Asegura que el contador avance correctamente
+        guardarDatos();
+    }
+
+
+    public List<Servicio> obtenerTodosLosServicios() { 
+        return servicios; 
+    }
+
+    public Servicio buscarServicioPorId(int id) { 
+        for (Servicio servicioActual : servicios) { 
+            if (servicioActual.getId() == id) {
+                System.out.println("DEBUG: Servicio con ID " + id + " encontrado.");
+                return servicioActual;
+            }
+        }
+        System.out.println("DEBUG: Servicio con ID " + id + " no encontrado.");
         return null;
     }
 
     public boolean eliminarServicio(int id) {
-        // TODO: Lógica de eliminación
-        return false;
+        boolean removed = servicios.removeIf(servicioActual -> servicioActual.getId() == id);
+
+        if (removed) {
+            guardarDatos(); 
+            System.out.println("DEBUG: Servicio con ID " + id + " eliminado.");
+        } else {
+            System.out.println("DEBUG: Servicio con ID " + id + " no encontrado para eliminar.");
+        }
+        return removed; 
     }
 
-    // Métodos para RESERVA (Estructura similar)
-    public void agregarReserva(Object reserva) { // Cambiar Object por Reserva
-        // TODO: Asignar ID
+        // Métodos para RESERVA
+    public void agregarReserva(Reserva reserva) { 
+        reserva.setIdReserva(nextReservaId++); 
         reservas.add(reserva);
         guardarDatos();
         System.out.println("DEBUG: Reserva agregada. Total: " + reservas.size());
     }
 
-    public List<Object> obtenerTodasLasReservas() { // Cambiar Object por Reserva
-        return reservas;
+    public List<Reserva> obtenerTodasLasReservas() { 
+        return reservas; 
     }
 
-    public Object buscarReservaPorId(int id) { // Cambiar Object por Reserva
-        for (Object obj : reservas) {
-            // TODO: Castear a Reserva y comparar su ID
+    public Reserva buscarReservaPorId(int id) { 
+        for (Reserva reservaActual : reservas) { 
+            if (reservaActual.getIdReserva() == id) {
+                System.out.println("DEBUG: Reserva con ID " + id + " encontrada.");
+                return reservaActual;
+            }
         }
+        System.out.println("DEBUG: Reserva con ID " + id + " no encontrada.");
         return null;
     }
 
     public boolean eliminarReserva(int id) {
-        // TODO: Lógica de eliminación
-        return false;
+        boolean removed = reservas.removeIf(reservaActual -> reservaActual.getIdReserva() == id);
+
+        if (removed) {
+            guardarDatos(); 
+            System.out.println("DEBUG: Reserva con ID " + id + " eliminada.");
+        } else {
+            System.out.println("DEBUG: Reserva con ID " + id + " no encontrada para eliminar.");
+        }
+        return removed;
     }
 
-    // Nota: Los Horarios se gestionan dentro de cada Barbero, no directamente aquí.
-    // Si necesitas acceder a todos los horarios disponibles de todos los barberos,
-    // tendrías que iterar sobre la lista de barberos y sus horarios.
-    // public List<Horario> obtenerTodosLosHorariosDisponibles() {
-    //     List<Horario> todos = new ArrayList<>();
-    //     for (Object barberoObj : barberos) {
-    //         // Barbero barbero = (Barbero) barberoObj; // Castear a Barbero
-    //         // todos.addAll(barbero.getHorariosTrabajo()); // Asumiendo que Barbero tiene este método
-    //     }
-    //     return todos;
-    // }
 }

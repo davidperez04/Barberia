@@ -21,11 +21,15 @@ public class Cliente extends Usuario{
     }
 
     public void setHistorialReservas(List<Reserva> historialReservas){
-        this.historialReservas = historialReservas;
+        if (this.historialReservas == null) {
+            this.historialReservas = new ArrayList<>();
+        }
+        this.historialReservas.addAll(historialReservas); // ✅ Agrega las reservas sin borrar las anteriores
     }
 
-    public Cliente(int id, String nombre, String telefono, String email) {
-        super(id, nombre, telefono);
+
+    public Cliente(int nextClienteId, String nombre, String telefono, String email) {
+        super(nextClienteId, nombre, telefono);
         this.email = email;
         this.historialReservas = new ArrayList<>();
     }
@@ -33,9 +37,11 @@ public class Cliente extends Usuario{
     public Cliente() { super(); } //Base de datos
 
     public void agregarReserva(Reserva reserva) {
+        if (historialReservas == null) {
+            historialReservas = new ArrayList<>();
+        }
         historialReservas.add(reserva);
     }
-
     public void cancelarReserva(int idReserva) {
     for (Reserva reserva : historialReservas) {
         if (reserva.getIdReserva() == idReserva) { 
