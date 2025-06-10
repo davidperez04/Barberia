@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        BaseDeDatos bd = new BaseDeDatos();
+        BaseDeDatos baseDatos = new BaseDeDatos();
         Scanner scanner = new Scanner(System.in);
         boolean continuar = true;
 
@@ -28,20 +28,20 @@ public class Main {
 
             switch (opcion) {
                 case 1:
-                    BarberoMenu.mostrar(bd, scanner);
+                    BarberoMenu.mostrar(baseDatos, scanner);
                     break;
                 case 2:
-                    ClienteMenu.mostrar(bd, scanner);
+                    ClienteMenu.mostrar(baseDatos, scanner);
                     break;
                 case 3:
-                    ReservaMenu.mostrar(bd, scanner);
+                    ReservaMenu.mostrar(baseDatos, scanner);
                     break;
                 case 4:
-                    ServicioMenu.mostrar(bd, scanner);
+                    ServicioMenu.mostrar(baseDatos, scanner);
                     break;
                 case 5:
                     continuar = false;
-                    bd.guardarDatos();
+                    baseDatos.guardarDatos();
                     System.out.println("Saliendo y guardando datos...");
                     break;
                 default:

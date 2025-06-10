@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.List;
 
 public class ClienteController {
-    public static void gestionar(BaseDeDatos bd, Scanner scanner) {
+    public static void gestionar(BaseDeDatos baseDatos, Scanner scanner) {
         int opcion = -1;
         do {
             try {
@@ -28,22 +28,22 @@ public class ClienteController {
                             String telefono = scanner.nextLine();
                             System.out.print("Email del cliente: ");
                             String email = scanner.nextLine();
-                            Cliente nuevoCliente = new Cliente(bd.getNextClienteId(), nombre, telefono, email);
-                            bd.agregarCliente(nuevoCliente);
+                            Cliente nuevoCliente = new Cliente(baseDatos.getNextClienteId(), nombre, telefono, email);
+                            baseDatos.agregarCliente(nuevoCliente);
                             System.out.println("✅ Cliente agregado.");
                             break;
 
                     case 2:
                         System.out.print("ID del cliente a eliminar: ");
                         int idEliminar = Integer.parseInt(scanner.nextLine());
-                        if (bd.eliminarCliente(idEliminar)) {
+                        if (baseDatos.eliminarCliente(idEliminar)) {
                             System.out.println("✅ Cliente eliminado.");
                         } else {
                             System.out.println("❌ No se encontró el cliente.");
                         }
                         break;
                     case 3:
-                        List<Cliente> clientes = bd.obtenerTodosLosClientes();
+                        List<Cliente> clientes = baseDatos.obtenerTodosLosClientes();
                         clientes.forEach(System.out::println);
                         break;
                     case 4:

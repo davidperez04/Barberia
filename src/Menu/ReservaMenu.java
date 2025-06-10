@@ -5,7 +5,7 @@ import datos.BaseDeDatos;
 import java.util.Scanner;
 
 public class ReservaMenu {
-    public static void mostrar(BaseDeDatos bd, Scanner scanner) {
-        ReservaController.gestionar(bd, scanner);
+    public static void mostrar(BaseDeDatos baseDatos, Scanner scanner) {
+        ReservaController.gestionar(baseDatos, scanner);
     }
 }

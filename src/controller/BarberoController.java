@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Arrays;
 
 public class BarberoController {
-    public static void gestionar(BaseDeDatos bd, Scanner scanner) {
+    public static void gestionar(BaseDeDatos baseDeDatos, Scanner scanner) {
         int opcion = -1;
         do {
             try {
@@ -35,26 +35,26 @@ public class BarberoController {
                                 System.out.println("❌ ERROR: El número de teléfono debe tener exactamente 10 dígitos numéricos.");
                             }
                         } while (telefono.length() != 10 || !telefono.matches("\\d+"));
-                        Barbero nuevoBarbero = new Barbero(bd.getNextBarberoId(), nombre, telefono);
-                        bd.agregarBarbero(nuevoBarbero);
+                        Barbero nuevoBarbero = new Barbero(baseDeDatos.getNextBarberoId(), nombre, telefono);
+                        baseDeDatos.agregarBarbero(nuevoBarbero);
                         System.out.println("✅ Barbero agregado con ID único.");
                         break;
                     case 2:
                         System.out.print("ID del barbero a eliminar: ");
                         int idEliminar = Integer.parseInt(scanner.nextLine());
-                        if (bd.eliminarBarbero(idEliminar)) {
+                        if (baseDeDatos.eliminarBarbero(idEliminar)) {
                             System.out.println("✅ Barbero eliminado.");
                         } else {
                             System.out.println("❌ No se encontró el barbero.");
                         }
                         break;
                     case 3:
-                        List<Barbero> barberos = bd.obtenerTodosLosBarberos();
+                        List<Barbero> barberos = baseDeDatos.obtenerTodosLosBarberos();
                         barberos.forEach(System.out::println);
                         break;
                     case 4:
                         System.out.println("Lista de barberos disponibles :");
-                        List<Barbero> barberosOut = bd.obtenerTodosLosBarberos();
+                        List<Barbero> barberosOut = baseDeDatos.obtenerTodosLosBarberos();
                         barberosOut.forEach(System.out::println);
                         System.out.println();
                         System.out.println("ID del barbero al que quieres agregar horario: ");
@@ -66,10 +66,10 @@ public class BarberoController {
                         System.out.print("Hora fin (HH:mm): ");
                         String horaFin = scanner.nextLine();
                         Horario nuevoHorario = new Horario(java.sql.Date.valueOf(fechaStr), horaInicio, horaFin);
-                        Barbero barbero = bd.buscarBarberoPorId(idBarberoHorario);
+                        Barbero barbero = baseDeDatos.buscarBarberoPorId(idBarberoHorario);
                         if (barbero != null) {
                             barbero.agregarHorario(nuevoHorario);
-                            bd.guardarDatos();
+                            baseDeDatos.guardarDatos();
                             System.out.println("✅ Horario agregado.");
                         } else {
                             System.out.println("❌ Barbero no encontrado.");
@@ -77,17 +77,17 @@ public class BarberoController {
                         break;
                     case 5:
                         System.out.println("Lista de barberos disponibles :");
-                        List<Barbero> barberosOut2 = bd.obtenerTodosLosBarberos();
+                        List<Barbero> barberosOut2 = baseDeDatos.obtenerTodosLosBarberos();
                         barberosOut2.forEach(System.out::println);
                         System.out.print("ID del barbero al que quieres asignar especialidades: ");
                         int idBarberoEspecialidad = Integer.parseInt(scanner.nextLine());
-                        Barbero barberoEspecialidad = bd.buscarBarberoPorId(idBarberoEspecialidad);
+                        Barbero barberoEspecialidad = baseDeDatos.buscarBarberoPorId(idBarberoEspecialidad);
                         if (barberoEspecialidad != null) {
                             System.out.print("Ingrese las especialidades separadas por comas (Ej: Corte, Afeitado, Diseño): ");
                             String inputEspecialidades = scanner.nextLine();
                             List<String> especialidades = Arrays.asList(inputEspecialidades.split(", "));
                             barberoEspecialidad.setEspecialidades(especialidades);
-                            bd.guardarDatos();
+                            baseDeDatos.guardarDatos();
                             System.out.println("✅ Especialidades asignadas correctamente.");
                         } else {
                             System.out.println("❌ Barbero no encontrado.");

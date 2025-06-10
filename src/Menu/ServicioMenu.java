@@ -5,7 +5,7 @@ import datos.BaseDeDatos;
 import java.util.Scanner;
 
 public class ServicioMenu {
-    public static void mostrar(BaseDeDatos bd, Scanner scanner) {
-        ServicioController.gestionar(bd, scanner);
+    public static void mostrar(BaseDeDatos baseDatos, Scanner scanner) {
+        ServicioController.gestionar(baseDatos, scanner);
     }
 }

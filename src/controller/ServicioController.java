@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.List;
 
 public class ServicioController {
-    public static void gestionar(BaseDeDatos bd, Scanner scanner) {
+    public static void gestionar(BaseDeDatos baseDatos, Scanner scanner) {
         int opcion = -1;
         do {
             try {
@@ -31,26 +31,26 @@ public class ServicioController {
                         int duracion = Integer.parseInt(scanner.nextLine());
 
                         Servicio nuevoServicio = new Servicio(
-                            bd.getNextServicioId(),
+                            baseDatos.getNextServicioId(),
                             nombre,
                             descripcion,
                             precio,
                             duracion
                         );
-                        bd.agregarServicio(nuevoServicio);
+                        baseDatos.agregarServicio(nuevoServicio);
                         System.out.println("✅ Servicio agregado.");
                         break;
                     case 2:
                         System.out.print("ID del servicio a eliminar: ");
                         int idEliminar = Integer.parseInt(scanner.nextLine());
-                        if (bd.eliminarServicio(idEliminar)) {
+                        if (baseDatos.eliminarServicio(idEliminar)) {
                             System.out.println("✅ Servicio eliminado.");
                         } else {
                             System.out.println("❌ No se encontró el servicio.");
                         }
                         break;
                     case 3:
-                        List<Servicio> servicios = bd.obtenerTodosLosServicios();
+                        List<Servicio> servicios = baseDatos.obtenerTodosLosServicios();
                         servicios.forEach(System.out::println);
                         break;
                     case 4:
