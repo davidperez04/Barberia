@@ -1,8 +1,10 @@
 package datos; 
 
 import java.io.*;
-import java.util.ArrayList; 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import modelo.Usuario;
 import modelo.Barbero;
@@ -338,15 +340,15 @@ public class BaseDeDatos implements Serializable {
 
 
     public List<Servicio> obtenerTodosLosServicios() {
-    List<Servicio> listaServicios = new ArrayList<>(servicios); // Servicios generales
+        Set<Servicio> listaServicios = new HashSet<>(servicios); // 🔥 Usa `Set` para evitar duplicados
 
-    // 🔥 Revisar los barberos y añadir sus servicios
-    for (Barbero barbero : barberos) {
-        listaServicios.addAll(barbero.getServicios());
+        for (Barbero barbero : barberos) {
+            listaServicios.addAll(barbero.getServicios());
+        }
+
+        return new ArrayList<>(listaServicios); // 🔥 Convierte de nuevo a `List`
     }
 
-    return listaServicios;
-}
 
 
    public Servicio buscarServicioPorId(int id) { 

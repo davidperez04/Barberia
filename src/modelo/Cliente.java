@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Cliente extends Usuario{
     private static final long serialVersionUID = 1L;
+
     private String email;
     private List<Reserva> historialReservas;
 
@@ -49,20 +50,23 @@ public class Cliente extends Usuario{
             }
         }
     }
+   
+
     
     @Override
     public void mostrarInformacion() {
         System.out.println("Cliente ID: " + getId() + ", Nombre: " + getNombre() + ", Email: " + email + ", Teléfono: " + getTelefono());
     }
     
+    
     @Override
-public String toString() {
-    return "Cliente{" +
-           "id='" + getId() + '\'' + 
-           ", nombre='" + getNombre() + '\'' + 
-           ", telefono='" + getTelefono() + '\'' + 
-           ", email='" + email + '\'' + 
-           ", historialReservas=" + historialReservas.size() + " reservas" + 
-           '}';
-}
+    public String toString() {
+        return "Cliente{" +
+            "id='" + getId() + '\'' + 
+            ", nombre='" + getNombre() + '\'' + 
+            ", telefono='" + getTelefono() + '\'' + 
+            ", email='" + email + '\'' + 
+            ", historialReservas=" + historialReservas.size() + " reservas" + 
+            '}';
+    }
 }

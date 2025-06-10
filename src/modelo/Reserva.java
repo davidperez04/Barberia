@@ -13,6 +13,7 @@ public class Reserva implements Serializable {
     private EstadoReserva estado;
     private Cliente cliente;
     private Barbero barbero;
+    private Servicio servicio;
     private List<Servicio> servicios;
 
     public Reserva(){
@@ -20,21 +21,27 @@ public class Reserva implements Serializable {
         this.servicios = new ArrayList<>();
     }
 
-    public Reserva(int idReserva, LocalDateTime fechaHora, Cliente cliente) {
-        if (idReserva <= 0) 
-            throw new IllegalArgumentException("El id de la reserva debe ser un número positivo.");
-        if (fechaHora == null)
-            throw new IllegalArgumentException("La fecha y hora no pueden ser nulas");
-        if (cliente == null)
-            throw new IllegalArgumentException("El cliente no puede ser nulo");
+    public Reserva(int idReserva, LocalDateTime fechaHora, Cliente cliente, Barbero barbero, Servicio servicio) {
+    if (idReserva <= 0) 
+        throw new IllegalArgumentException("El id de la reserva debe ser un número positivo.");
+    if (fechaHora == null)
+        throw new IllegalArgumentException("La fecha y hora no pueden ser nulas.");
+    if (cliente == null)
+        throw new IllegalArgumentException("El cliente no puede ser nulo.");
+    if (barbero == null)
+        throw new IllegalArgumentException("El barbero no puede ser nulo.");
+    if (servicio == null)
+        throw new IllegalArgumentException("El servicio no puede ser nulo.");
 
-        this.idReserva = idReserva; 
-        this.fechaHora = fechaHora;
-        this.estado = EstadoReserva.PENDIENTE; 
-        this.cliente = cliente;
-        this.servicios = new ArrayList<>();
-        
-    }
+    this.idReserva = idReserva; 
+    this.fechaHora = fechaHora;
+    this.estado = EstadoReserva.PENDIENTE; 
+    this.cliente = cliente;
+    this.barbero = barbero; // 🔥 Agregar Barbero
+    this.servicio = servicio; // 🔥 Agregar Servicio
+    this.servicios = new ArrayList<>();
+}
+
 
     public void confirmar() {
         if (estado == EstadoReserva.PENDIENTE) {
@@ -137,21 +144,32 @@ public class Reserva implements Serializable {
         servicios.add(servicio);
     }
 
+     public Servicio getServicio() {
+        return servicio;
+    }
+
+    public void setServicio(Servicio servicio) {
+        if (servicio == null)
+            throw new IllegalArgumentException("El servicio no puede ser nulo");
+        this.servicio = servicio;
+    }
+
+
     // Devuelve una copia inmodificable de la lista de servicios
     public List<Servicio> getServicios() {
         return Collections.unmodifiableList(servicios);
     }
 
     @Override
-    public String toString() {
-        return "Reserva{" +
-               "id=" + idReserva +
-               ", fechaHora=" + fechaHora +
-               ", estado=" + estado +
-               ", clienteId=" + (cliente != null ? cliente.getId() : "N/A") + // Mostrar solo ID del cliente
-               ", barberoId=" + (barbero != null ? barbero.getId() : "N/A") + // Mostrar solo ID del barbero
-               ", numServicios=" + servicios.size() +
-               ", total=" + calcularTotal() +
-               '}';
-    }
+public String toString() {
+    return "Reserva{" +
+           "id=" + idReserva +
+           ", fechaHora=" + fechaHora +
+           ", estado=" + estado +
+           ", clienteId=" + cliente.getId() +
+           ", barberoId=" + barbero.getId() +
+           ", total=" + calcularTotal() + // 🔥 Ahora muestra el total calculado
+           '}';
+}
+
 }

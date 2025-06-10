@@ -6,9 +6,10 @@ import java.util.List;
 
 public class Barbero extends Usuario {
     private static final long serialVersionUID = 1L;
+
+
     private List<String> especialidades;
     private List<Horario> horarioTrabajo;
-    private String contrasena; 
     private List<Servicio> servicios;
 
     // Constructor vacío por razones de deserialización
@@ -19,11 +20,10 @@ public class Barbero extends Usuario {
     }
 
     // Constructor actualizado para incluir la contraseña del barbero
-    public Barbero(int id, String nombre, String telefono, String contrasena) { 
+    public Barbero(int id, String nombre, String telefono) { 
         super(id, nombre, telefono);
         this.especialidades = new ArrayList<>();
         this.horarioTrabajo = new ArrayList<>();
-        this.contrasena = contrasena; 
         this.servicios = new ArrayList<>();
     }
 
@@ -51,13 +51,6 @@ public class Barbero extends Usuario {
         this.horarioTrabajo = horarioTrabajo;
     }
 
-    public String getContrasena() { 
-        return contrasena;
-    }
-
-    public void setContrasena(String contrasena) { 
-        this.contrasena = contrasena;
-    }
 
     public List<Horario> verDisponibilidad(Date fecha) {
         List<Horario> disponibles = new ArrayList<>();
@@ -86,7 +79,7 @@ public class Barbero extends Usuario {
 
     @Override
     public void mostrarInformacion() {
-        System.out.println("Barbero ID: " + getId() + ", Nombre: " + getNombre() + ", Teléfono: " + getTelefono() + ", Especialidades: " + especialidades + ", Contraseña: " + contrasena); // Muestra la contraseña para depuración, puedes quitarla en prod.
+        System.out.println("Barbero ID: " + getId() + ", Nombre: " + getNombre() + ", Teléfono: " + getTelefono() + ", Especialidades: " + especialidades);
     }
     
 
@@ -97,8 +90,7 @@ public class Barbero extends Usuario {
                ", nombre='" + getNombre() + '\'' +
                ", telefono='" + getTelefono() + '\'' +
                ", especialidades=" + especialidades +
-               ", horarioTrabajo=" + horarioTrabajo +
-               ", contrasena='[CENSURADO]'" + 
+               ", horarioTrabajo=" + horarioTrabajo + 
                '}';
     }
 }
