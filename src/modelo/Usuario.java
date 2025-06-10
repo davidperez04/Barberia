@@ -12,6 +12,7 @@ public abstract class Usuario implements Serializable {
         this.id = id;
         this.nombre = nombre;
         this.telefono = telefono;
+       
     }
 
     public Usuario(){}

@@ -21,6 +21,7 @@ public class Reserva implements Serializable {
         this.servicios = new ArrayList<>();
     }
 
+    // Constructor alternativo si quieres crear la reserva sin estado inicial
     public Reserva(int idReserva, LocalDateTime fechaHora, Cliente cliente, Barbero barbero, Servicio servicio) {
     if (idReserva <= 0) 
         throw new IllegalArgumentException("El id de la reserva debe ser un número positivo.");

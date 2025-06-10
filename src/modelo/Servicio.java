@@ -1,4 +1,5 @@
 package modelo;
+
 import java.io.Serializable;
 
 public class Servicio implements Serializable {
@@ -30,6 +31,7 @@ public class Servicio implements Serializable {
         return id;
     }
 
+    // Setter necesario para asignar el ID desde BaseDeDatos
     public void setId(int id) {
         if (id <= 0) throw new IllegalArgumentException("El ID del servicio debe ser un número positivo.");
         this.id = id;

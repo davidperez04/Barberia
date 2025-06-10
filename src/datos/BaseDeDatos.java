@@ -32,7 +32,7 @@ public class BaseDeDatos implements Serializable {
     // Contadores para generar IDs únicos 
     private int nextClienteId = 1;
     private int nextBarberoId = 1;
-    private int nextServicioId = 3;
+    private int nextServicioId = 1;
     private int nextReservaId = 1;
     private int nextUsuarioId = 1;
 

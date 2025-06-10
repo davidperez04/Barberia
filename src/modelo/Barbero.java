@@ -82,15 +82,17 @@ public class Barbero extends Usuario {
         System.out.println("Barbero ID: " + getId() + ", Nombre: " + getNombre() + ", Teléfono: " + getTelefono() + ", Especialidades: " + especialidades);
     }
     
-
     @Override
     public String toString() {
-        return "Barbero{" +
-               "id=" + getId() +
-               ", nombre='" + getNombre() + '\'' +
-               ", telefono='" + getTelefono() + '\'' +
-               ", especialidades=" + especialidades +
-               ", horarioTrabajo=" + horarioTrabajo + 
-               '}';
+        StringBuilder salida = new StringBuilder();
+        salida.append("ID: ").append(id).append("\n")
+        .append("Nombre: ").append(nombre).append("\n")
+        .append("Teléfono: ").append(telefono).append("\n")
+        .append("Especialidades: ").append(especialidades).append("\n")
+        .append("Horarios:\n");
+        for (Horario hora : horarioTrabajo) {
+            salida.append("  ").append(hora).append("\n");
+        }
+        return salida.toString();
     }
 }

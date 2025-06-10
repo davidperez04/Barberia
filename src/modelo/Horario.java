@@ -5,6 +5,7 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+
 public class Horario implements Serializable {
     private static final long serialVersionUID = 1L;
     private int id ;
@@ -62,6 +63,9 @@ public class Horario implements Serializable {
         return disponible;
     }
 
+    public void setDisponible(boolean disponible) {
+    this.disponible = disponible;
+    }
     // Validación de formato HH:mm
    private boolean esHoraValida(String hora) {
     if (hora == null) return false;
