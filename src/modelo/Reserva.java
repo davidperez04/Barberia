@@ -61,15 +61,22 @@ public class Reserva implements Serializable {
         }
     }
 
-    public double calcularTotal() {
-        double total = 0;
-        for (Servicio servicio : servicios) {
-            if (servicio != null) {
-                total += servicio.getPrecio();
-            }
-        }
-        return total;
+    // ...existing code...
+public double calcularTotal() {
+    double total = 0;
+    // Suma el precio del servicio principal si existe
+    if (servicio != null) {
+        total += servicio.getPrecio();
     }
+    // Suma los precios de los servicios adicionales (si hay)
+    for (Servicio servicios : servicios) {
+        if (servicios != null) {
+            total += servicios.getPrecio();
+        }
+    }
+    return total;
+}
+// ...existing code...
 
     public int getIdReserva(){
         return idReserva;

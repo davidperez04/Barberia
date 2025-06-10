@@ -302,9 +302,9 @@ public class Main {
                     List<Reserva> reservas = bd.obtenerTodasLasReservas();
                     reservas.forEach(System.out::println);
 
-                    System.out.print("¿Deseas actualizar alguna reserva? (sí/no): ");
+                    System.out.print("¿Deseas actualizar alguna reserva? (si/no): ");
                     String respuesta = scanner.nextLine().toLowerCase();
-                    if (respuesta.equals("sí")) {
+                    if (respuesta.equals("si")) {
                         System.out.print("ID de la reserva a actualizar: ");
                         int idReservaActualizar = Integer.parseInt(scanner.nextLine());
                         Reserva reservaActualizar = bd.buscarReservaPorId(idReservaActualizar);
@@ -317,7 +317,7 @@ public class Main {
                         System.out.println("Opciones de estado:");
                         System.out.println("1. Confirmar reserva");
                         System.out.println("2. Cancelar reserva");
-                        System.out.println("3. Completar reserva");
+                        System.out.println("3. Servicio completado");
                         System.out.print("Selecciona una opción: ");
                         int opcionEstado = Integer.parseInt(scanner.nextLine());
 
