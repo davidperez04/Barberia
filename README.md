@@ -3,7 +3,7 @@ Este es el digrama UML para las clases del sistema de gestión de reservas en un
 ![image](https://github.com/user-attachments/assets/975f0006-340f-4df0-adc5-82663e1dd0dd)
 -------------------------------------------------------------------
 Código del diagrama UML en plantuml :
-
+<pre>
 @startuml
 ' Estilos opcionales
 skinparam classAttributeIconSize 0
@@ -165,4 +165,5 @@ ReservaController ..> BaseDeDatos
 ServicioController ..> BaseDeDatos
 
 @enduml
+</pre>
 
