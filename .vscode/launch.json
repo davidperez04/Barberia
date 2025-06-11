@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "InterfazGrafica",
+            "request": "launch",
+            "mainClass": "gui.InterfazGrafica",
+            "projectName": "Barberia_3ed9dc74"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "app.Main",

@@ -84,15 +84,10 @@ public class Barbero extends Usuario {
     
     @Override
     public String toString() {
-        StringBuilder salida = new StringBuilder();
-        salida.append("ID: ").append(id).append("\n")
-        .append("Nombre: ").append(nombre).append("\n")
-        .append("Teléfono: ").append(telefono).append("\n")
-        .append("Especialidades: ").append(especialidades).append("\n")
-        .append("Horarios:\n");
-        for (Horario hora : horarioTrabajo) {
-            salida.append("  ").append(hora).append("\n");
-        }
-        return salida.toString();
+
+        String especialidad = (especialidades != null && !especialidades.isEmpty())
+            ? especialidades.get(0)
+            : "Sin especialidad";
+        return nombre + " (ID: " + id + ", Especialidad: " + especialidad + ")";
     }
 }

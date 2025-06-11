@@ -61,12 +61,6 @@ public class Cliente extends Usuario{
     
     @Override
     public String toString() {
-        return "Cliente{" +
-            "id='" + getId() + '\'' + 
-            ", nombre='" + getNombre() + '\'' + 
-            ", telefono='" + getTelefono() + '\'' + 
-            ", email='" + email + '\'' + 
-            ", historialReservas=" + historialReservas.size() + " reservas" + 
-            '}';
+        return getNombre() + " (ID: " + getId() + ")";
     }
 }
