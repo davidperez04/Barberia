@@ -1,64 +1,166 @@
 Este es el digrama UML para las clases del sistema de gestión de reservas en una barbería
 ![image](https://github.com/user-attachments/assets/975f0006-340f-4df0-adc5-82663e1dd0dd)
 -------------------------------------------------------------------
-# 📖 Documentación de Clases
+Código del diagrama UML en plantuml :
+@startuml
+' Estilos opcionales
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+skinparam classMethodFontSize 11
 
-## 📌 EstadoReserva
-Enum que representa los posibles estados de una reserva en la barbería.
+' Enumeración
+enum EstadoReserva {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  COMPLETADA
+}
 
-- **`PENDIENTE`** 🟡 → La reserva está creada pero aún no ha sido confirmada.
-- **`CONFIRMADA`** ✅ → La reserva ha sido confirmada y está lista para su uso.
-- **`CANCELADA`** ❌ → La reserva fue cancelada y no se llevará a cabo.
-- **`COMPLETADA`** 💈 → El servicio de la reserva ha sido realizado exitosamente.
+' Clases principales
+class Main {
+  +main(String[] args)
+}
 
----
+class BaseDeDatos {
+  -List<Usuario> usuarios
+  -List<Barbero> barberos
+  -List<Cliente> clientes
+  -List<Servicio> servicios
+  -List<Reserva> reservas
+  -int nextClienteId
+  -int nextBarberoId
+  -int nextServicioId
+  -int nextReservaId
+  -int nextUsuarioId
+  +guardarDatos()
+  +cargarDatos()
+  +CRUD...
+  +buscarPorId()
+}
 
-## 🕒 Horario
-Clase que representa un horario disponible para agendar una reserva.
+abstract class Usuario {
+  -int id
+  -String nombre
+  -String telefono
+  +mostrarInformacion()
+  +toString()
+}
 
-### 📌 Atributos
-- **`fecha`** 📅 → Fecha del horario.
-- **`horaInicio`** ⏰ → Hora de inicio (_formato 12 horas_, ej: `"09:00 AM"`).
-- **`horaFin`** ⏰ → Hora de fin (_formato 12 horas_, ej: `"10:00 AM"`).
-- **`disponible`** ✅ → Indica si el horario está disponible.
+class Barbero {
+  -List<String> especialidades
+  -List<Horario> horarioTrabajo
+  -List<Servicio> servicios
+  +agregarEspecialidad(String)
+  +agregarHorario(Horario)
+  +agregarServicio(Servicio)
+  +verDisponibilidad(Date)
+  +mostrarInformacion()
+  +toString()
+}
 
-### 🛠 Métodos principales
-- **`marcarComoOcupado()`** ❌ → Marca el horario como no disponible.
-- **`getFecha()`** 📅 → Devuelve la fecha del horario.
-- **`isDisponible()`** ✅ → Indica si el horario está disponible.
+class Cliente {
+  -String email
+  -List<Reserva> historialReservas
+  +agregarReserva(Reserva)
+  +cancelarReserva(int)
+  +mostrarInformacion()
+  +toString()
+}
 
----
+class Reserva {
+  -int idReserva
+  -LocalDateTime fechaHora
+  -EstadoReserva estado
+  -Cliente cliente
+  -Barbero barbero
+  -Servicio servicio
+  -List<Servicio> servicios
+  +confirmar()
+  +cancelar()
+  +completar()
+  +calcularTotal()
+  +agregarServicio(Servicio)
+  +toString()
+}
 
-## 📅 Reserva
-Clase que representa una reserva realizada por un cliente.
+class Horario {
+  -int id
+  -Date fecha
+  -String horaInicio
+  -String horaFin
+  -boolean disponible
+  +marcarComoOcupado()
+  +marcarComoDisponible()
+  +esHoraValida(String)
+  +toString()
+}
 
-### 🔹 Atributos
-- **`idReserva`** 🆔 → Identificador único de la reserva.
-- **`fechaHora`** ⏳ → Fecha y hora de la reserva.
-- **`estado`** 📌 → Estado actual de la reserva (`EstadoReserva`).
-- **`cliente`** 👤 → Cliente que realiza la reserva.
-- **`barbero`** ✂️ → Barbero asignado a la reserva.
-- **`servicios`** 💼 → Lista de servicios solicitados.
+class Servicio {
+  -int id
+  -String nombre
+  -String descripcion
+  -double precio
+  -int duracionMinutos
+  +setNombre(String)
+  +setDescripcion(String)
+  +setPrecio(double)
+  +setDuracionMinutos(int)
+  +toString()
+}
 
-### 🛠 Métodos principales
-- **`confirmar()`** ✅ → Cambia el estado a `CONFIRMADA`.
-- **`cancelar()`** ❌ → Cambia el estado a `CANCELADA`.
-- **`completar()`** 💈 → Cambia el estado a `COMPLETADA`.
-- **`calcularTotal()`** 💰 → Suma el precio de todos los servicios.
-- **`agregarServicio(Servicio)`** ➕ → Agrega un servicio a la reserva.
-- **`asignarBarbero(Barbero)`** ✂️ → Asigna un barbero a la reserva.
+' Menús y controladores
+class BarberoMenu {
+  +mostrar(BaseDeDatos, Scanner)
+}
+class ClienteMenu {
+  +mostrar(BaseDeDatos, Scanner)
+}
+class ReservaMenu {
+  +mostrar(BaseDeDatos, Scanner)
+}
+class ServicioMenu {
+  +mostrar(BaseDeDatos, Scanner)
+}
 
----
+class BarberoController {
+  +gestionar(BaseDeDatos, Scanner)
+}
+class ClienteController {
+  +gestionar(BaseDeDatos, Scanner)
+}
+class ReservaController {
+  +gestionar(BaseDeDatos, Scanner)
+}
+class ServicioController {
+  +gestionar(BaseDeDatos, Scanner)
+}
 
-## 💇‍♂️ Servicio
-Clase que representa un servicio o corte ofrecido por la barbería.
+' Relaciones
+Usuario <|-- Barbero
+Usuario <|-- Cliente
 
-### 🏷️ Atributos
-- **`nombre`** ✂️ → Nombre del servicio (ej: `"Corte clásico"`).
-- **`precio`** 💰 → Precio del servicio.
+Reserva --> Cliente
+Reserva --> Barbero
+Reserva --> Servicio
+Reserva *-- "1..*" Servicio
 
-### 🛠 Métodos principales
-- **`getNombre()`** 🔍 → Devuelve el nombre del servicio.
-- **`getPrecio()`** 💰 → Devuelve el precio del servicio.
-- **`setNombre(String)`** ✏️ → Cambia el nombre del servicio _(no permite nulos o vacíos)_.
-- **`setPrecio(double)`** 🔢 → Cambia el precio del servicio _(no permite valores negativos)_.
+Barbero --> "0..*" Horario
+BaseDeDatos o-- Usuario
+BaseDeDatos o-- Barbero
+BaseDeDatos o-- Cliente
+BaseDeDatos o-- Servicio
+BaseDeDatos o-- Reserva
+
+BarberoMenu ..> BarberoController
+ClienteMenu ..> ClienteController
+ReservaMenu ..> ReservaController
+ServicioMenu ..> ServicioController
+
+BarberoController ..> BaseDeDatos
+ClienteController ..> BaseDeDatos
+ReservaController ..> BaseDeDatos
+ServicioController ..> BaseDeDatos
+
+@enduml
+
