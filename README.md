@@ -1,6 +1,6 @@
 # **BarberFlow**
 ## Integrantes del grupo :
-#### Jesús David Pérez Duran 192480 - Desarrollador de Lógica.
+#### Jesús David Pérez Duran 192480 - Desarrollador de Lógica y Base de Datos.
 - Aseguró la navegación fluida del sistema a través de consola (Main.java).
 - Participó en la implementación de operaciones CRUD y estructuras de datos en BaseDeDatos.
 - Implementó funcionalidades específicas en los controladores.
@@ -22,9 +22,16 @@
 - Implementó clases y métodos relacionados con la gestión de usuarios (Usuario, Cliente, Barbero).
 - Apoyó en la creación del sistema de herencia y relaciones entre entidades.
 - Se aseguró de que el código se viese ordenado y de que fuera mantenible.
+- Apoyó en pruebas funcionales y corrección de errores lógicos.
+- Se aseguró de que el desarrollo del trabajo siguiese los lineamientos del SDLC, asegurando un flujo adecuado y que se lograse lo planeado.
 
-#### Fabian camilo Perez Galvis 192518 - Diseñador de Interfaz.
--
+#### Fabian camilo Perez Galvis 192518 - Desarrollador y Diseñador de Interfaz Gráfica.
+- Diseñó e implementó la interfaz gráfica del sistema utilizando Java Swing.
+- Desarrolló ventanas con JFrame, pestañas con JTabbedPane, y tablas con JTable.
+- Integró visualmente las funcionalidades del sistema en paneles de barberos, clientes, servicios y reservas.
+- Aseguró la experiencia de usuario mediante navegación clara e interacción gráfica.
+- Apoyó en pruebas funcionales y corrección de errores lógicos.
+- Aseguró la navegación fluida del sistema a través de consola (Main.java).
 
 Este es el digrama UML para las clases del sistema de gestión de reservas en una barbería
 ![image](https://github.com/user-attachments/assets/975f0006-340f-4df0-adc5-82663e1dd0dd)
