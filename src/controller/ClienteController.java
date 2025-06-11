@@ -30,16 +30,16 @@ public class ClienteController {
                             String email = scanner.nextLine();
                             Cliente nuevoCliente = new Cliente(baseDatos.getNextClienteId(), nombre, telefono, email);
                             baseDatos.agregarCliente(nuevoCliente);
-                            System.out.println("✅ Cliente agregado.");
+                            System.out.println("Cliente agregado.");
                             break;
 
                     case 2:
                         System.out.print("ID del cliente a eliminar: ");
                         int idEliminar = Integer.parseInt(scanner.nextLine());
                         if (baseDatos.eliminarCliente(idEliminar)) {
-                            System.out.println("✅ Cliente eliminado.");
+                            System.out.println("Cliente eliminado.");
                         } else {
-                            System.out.println("❌ No se encontró el cliente.");
+                            System.out.println("No se encontró el cliente.");
                         }
                         break;
                     case 3:
@@ -47,13 +47,13 @@ public class ClienteController {
                         clientes.forEach(System.out::println);
                         break;
                     case 4:
-                        System.out.println("📌 Saliendo de Gestión de Clientes...");
+                        System.out.println("Saliendo de Gestión de Clientes...");
                         break;
                     default:
-                        System.out.println("❌ Opción no válida. Ingresa un número del menú.");
+                        System.out.println("Opción no válida. Ingresa un número del menú.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("❌ ERROR: Ingresa un número válido del menú.");
+                System.out.println("ERROR: Ingresa un número válido del menú.");
             }
         } while (opcion != 4);
     }

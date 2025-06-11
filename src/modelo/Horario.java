@@ -69,7 +69,7 @@ public class Horario implements Serializable {
     // Validación de formato HH:mm
    private boolean esHoraValida(String hora) {
     if (hora == null) return false;
-    SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm"); // 🔥 Ahora acepta formato 24h
+    SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm"); // Ahora acepta formato 24h
     formatoHora.setLenient(false);
     try {
         formatoHora.parse(hora);

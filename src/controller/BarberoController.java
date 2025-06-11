@@ -32,20 +32,20 @@ public class BarberoController {
                             System.out.print("Teléfono del barbero (10 dígitos): ");
                             telefono = scanner.nextLine();
                             if (telefono.length() != 10 || !telefono.matches("\\d+")) {
-                                System.out.println("❌ ERROR: El número de teléfono debe tener exactamente 10 dígitos numéricos.");
+                                System.out.println("ERROR: El número de teléfono debe tener exactamente 10 dígitos numéricos.");
                             }
                         } while (telefono.length() != 10 || !telefono.matches("\\d+"));
                         Barbero nuevoBarbero = new Barbero(baseDeDatos.getNextBarberoId(), nombre, telefono);
                         baseDeDatos.agregarBarbero(nuevoBarbero);
-                        System.out.println("✅ Barbero agregado con ID único.");
+                        System.out.println("Barbero agregado con ID único.");
                         break;
                     case 2:
                         System.out.print("ID del barbero a eliminar: ");
                         int idEliminar = Integer.parseInt(scanner.nextLine());
                         if (baseDeDatos.eliminarBarbero(idEliminar)) {
-                            System.out.println("✅ Barbero eliminado.");
+                            System.out.println("Barbero eliminado.");
                         } else {
-                            System.out.println("❌ No se encontró el barbero.");
+                            System.out.println("No se encontró el barbero.");
                         }
                         break;
                     case 3:
@@ -70,9 +70,9 @@ public class BarberoController {
                         if (barbero != null) {
                             barbero.agregarHorario(nuevoHorario);
                             baseDeDatos.guardarDatos();
-                            System.out.println("✅ Horario agregado.");
+                            System.out.println("Horario agregado.");
                         } else {
-                            System.out.println("❌ Barbero no encontrado.");
+                            System.out.println("Barbero no encontrado.");
                         }
                         break;
                     case 5:
@@ -88,19 +88,19 @@ public class BarberoController {
                             List<String> especialidades = Arrays.asList(inputEspecialidades.split(", "));
                             barberoEspecialidad.setEspecialidades(especialidades);
                             baseDeDatos.guardarDatos();
-                            System.out.println("✅ Especialidades asignadas correctamente.");
+                            System.out.println("Especialidades asignadas correctamente.");
                         } else {
-                            System.out.println("❌ Barbero no encontrado.");
+                            System.out.println("Barbero no encontrado.");
                         }
                         break;
                     case 6:
-                        System.out.println("📌 Saliendo de Gestión de Barberos...");
+                        System.out.println("Saliendo de Gestión de Barberos...");
                         break;
                     default:
-                        System.out.println("❌ Opción no válida. Ingresa un número del menú.");
+                        System.out.println("Opción no válida. Ingresa un número del menú.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("❌ ERROR: Ingresa un número válido del menú.");
+                System.out.println("ERROR: Ingresa un número válido del menú.");
             }
         } while (opcion != 6);
     }

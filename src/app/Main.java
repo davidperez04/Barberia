@@ -1,7 +1,8 @@
 package app;
 
 import datos.BaseDeDatos;
-import Menu.*;
+import menu.*;
+
 import java.util.Scanner;
 
 public class Main {
@@ -22,7 +23,7 @@ public class Main {
             try {
                 opcion = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("❌ ERROR: Ingresa un número válido.");
+                System.out.println("ERROR: Ingresa un número válido.");
                 continue;
             }
 

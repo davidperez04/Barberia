@@ -38,8 +38,8 @@ public class Reserva implements Serializable {
     this.fechaHora = fechaHora;
     this.estado = EstadoReserva.PENDIENTE; 
     this.cliente = cliente;
-    this.barbero = barbero; // 🔥 Agregar Barbero
-    this.servicio = servicio; // 🔥 Agregar Servicio
+    this.barbero = barbero; // Agregar Barbero
+    this.servicio = servicio; // Agregar Servicio
     this.servicios = new ArrayList<>();
 }
 
@@ -176,7 +176,7 @@ public String toString() {
            ", estado=" + estado +
            ", clienteId=" + cliente.getId() +
            ", barberoId=" + barbero.getId() +
-           ", total=" + calcularTotal() + // 🔥 Ahora muestra el total calculado
+           ", total=" + calcularTotal() + // Ahora muestra el total calculado
            '}';
 }
 

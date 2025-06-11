@@ -25,7 +25,7 @@ public class Cliente extends Usuario{
         if (this.historialReservas == null) {
             this.historialReservas = new ArrayList<>();
         }
-        this.historialReservas.addAll(historialReservas); // ✅ Agrega las reservas sin borrar las anteriores
+        this.historialReservas.addAll(historialReservas); // Agrega las reservas sin borrar las anteriores
     }
 
 

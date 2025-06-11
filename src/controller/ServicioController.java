@@ -38,15 +38,15 @@ public class ServicioController {
                             duracion
                         );
                         baseDatos.agregarServicio(nuevoServicio);
-                        System.out.println("✅ Servicio agregado.");
+                        System.out.println("Servicio agregado.");
                         break;
                     case 2:
                         System.out.print("ID del servicio a eliminar: ");
                         int idEliminar = Integer.parseInt(scanner.nextLine());
                         if (baseDatos.eliminarServicio(idEliminar)) {
-                            System.out.println("✅ Servicio eliminado.");
+                            System.out.println("Servicio eliminado.");
                         } else {
-                            System.out.println("❌ No se encontró el servicio.");
+                            System.out.println("No se encontró el servicio.");
                         }
                         break;
                     case 3:
@@ -54,13 +54,13 @@ public class ServicioController {
                         servicios.forEach(System.out::println);
                         break;
                     case 4:
-                        System.out.println("📌 Saliendo de Gestión de Servicios...");
+                        System.out.println("Saliendo de Gestión de Servicios...");
                         break;
                     default:
-                        System.out.println("❌ Opción no válida. Ingresa un número del menú.");
+                        System.out.println("Opción no válida. Ingresa un número del menú.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("❌ ERROR: Ingresa un número válido del menú.");
+                System.out.println("ERROR: Ingresa un número válido del menú.");
             }
         } while (opcion != 4);
     }

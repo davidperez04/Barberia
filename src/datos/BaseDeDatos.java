@@ -251,10 +251,10 @@ public class BaseDeDatos implements Serializable {
 
     // Métodos para CLIENTE 
     public void agregarCliente(Cliente nuevoCliente) {
-        nuevoCliente.setId(nextClienteId);  // ✅ Asigna un ID único al cliente
+        nuevoCliente.setId(nextClienteId);  // Asigna un ID único al cliente
         clientes.add(nuevoCliente);
-        nextClienteId++;  // ✅ Incrementa el contador
-        guardarDatos();   // ✅ Guarda los datos actualizados
+        nextClienteId++;  // Incrementa el contador
+        guardarDatos();   // Guarda los datos actualizados
     }
 
 
@@ -287,12 +287,12 @@ public class BaseDeDatos implements Serializable {
     public void actualizarCliente(Cliente clienteActualizado) {
     for (int i = 0; i < clientes.size(); i++) {
         if (clientes.get(i).getId() == clienteActualizado.getId()) {
-            clientes.set(i, clienteActualizado); // ✅ Reemplaza el cliente con sus nuevas reservas
-            guardarDatos(); // ✅ Asegura que los datos se guarden en los archivos
+            clientes.set(i, clienteActualizado); // Reemplaza el cliente con sus nuevas reservas
+            guardarDatos(); // Asegura que los datos se guarden en los archivos
             return;
         }
     }
-    System.out.println("❌ Cliente no encontrado en la base de datos.");
+    System.out.println("Cliente no encontrado en la base de datos.");
 }
 
 
@@ -332,21 +332,21 @@ public class BaseDeDatos implements Serializable {
 
     // Métodos para SERVICIO
     public void agregarServicio(Servicio servicio) { 
-        servicio.setId(getNextServicioId());  // ✅ Asigna un ID único
+        servicio.setId(getNextServicioId());  // Asigna un ID único
         servicios.add(servicio);
-        incrementarServicioId();  // ✅ Asegura que el contador avance correctamente
+        incrementarServicioId();  // Asegura que el contador avance correctamente
         guardarDatos();
     }
 
 
     public List<Servicio> obtenerTodosLosServicios() {
-        Set<Servicio> listaServicios = new HashSet<>(servicios); // 🔥 Usa `Set` para evitar duplicados
+        Set<Servicio> listaServicios = new HashSet<>(servicios); // Usa `Set` para evitar duplicados
 
         for (Barbero barbero : barberos) {
             listaServicios.addAll(barbero.getServicios());
         }
 
-        return new ArrayList<>(listaServicios); // 🔥 Convierte de nuevo a `List`
+        return new ArrayList<>(listaServicios); // Convierte de nuevo a `List`
     }
 
 
