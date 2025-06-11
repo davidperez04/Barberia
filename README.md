@@ -1,4 +1,31 @@
-# Bienvenidos a nuestro proyecto
+# **BarberFlow**
+## Integrantes del grupo :
+#### Jesús David Pérez Duran 192480 - Desarrollador de Lógica.
+- Aseguró la navegación fluida del sistema a través de consola (Main.java).
+- Participó en la implementación de operaciones CRUD y estructuras de datos en BaseDeDatos.
+- Implementó funcionalidades específicas en los controladores.
+- Desarrolló los menús interactivos para barberos, clientes, servicios y reservas.
+- Apoyó en pruebas funcionales y corrección de errores lógicos.
+- se encargó de elaborar la estructura del código, así como el diagrama UML.
+- Participó en la modularización del código y los paquetes que contienen cada clase. 
+
+#### Luifer Rojas Arévalo 192494 - Desarrollador de Lógica.
+- Diseñó y codificó la lógica para el manejo de horarios y disponibilidad (Horario).
+- Encargado del desarrollo del módulo de reservas (Reserva, EstadoReserva).
+- Se encargó de la lógica de servicios (Servicio, CRUD y asignación a barberos).
+- Participó en la modularización del código y los paquetes que contienen cada clase.
+- Apoyó en pruebas funcionales y corrección de errores lógicos.
+- Implementó funcionalidades específicas en los controladores.
+- Aseguró la navegación fluida del sistema a través de consola (Main.java).
+
+#### Sebastián León Carrascal 192506 - Desarrollador de Lógica.
+- Implementó clases y métodos relacionados con la gestión de usuarios (Usuario, Cliente, Barbero).
+- Apoyó en la creación del sistema de herencia y relaciones entre entidades.
+- Se aseguró de que el código se viese ordenado y de que fuera mantenible.
+
+#### Fabian camilo Perez Galvis 192518 - Diseñador de Interfaz.
+-
+
 Este es el digrama UML para las clases del sistema de gestión de reservas en una barbería
 ![image](https://github.com/user-attachments/assets/975f0006-340f-4df0-adc5-82663e1dd0dd)
 -------------------------------------------------------------------
