@@ -32,6 +32,7 @@
 - Aseguró la experiencia de usuario mediante navegación clara e interacción gráfica.
 - Apoyó en pruebas funcionales y corrección de errores lógicos.
 - Aseguró la navegación fluida del sistema a través de consola (Main.java).
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Problema Identificado:
 
@@ -55,6 +56,7 @@ Toda la información se centraliza en una base de datos, lo que facilita el acce
 
 Finalmente, el programa cuenta con una interfaz intuitiva, diseñada con menús claros y opciones fáciles de usar, lo que reduce la curva de aprendizaje para los usuarios y asegura que el sistema pueda ser utilizado de manera eficiente incluso por personas sin experiencia técnica. En conjunto, el sistema de Gestión de Barbería representa una herramienta poderosa para mejorar la organización, reducir errores y optimizar la operación de las barberías.
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### Explicación de las Clases y Métodos Principales: 
 El programa está diseñado para gestionar una barbería, permitiendo administrar barberos, clientes, reservas y servicios. A continuación, se describen las clases y métodos principales que conforman el sistema:
 
@@ -223,7 +225,29 @@ Estas clases son invocadas desde el menú principal (Main) para ejecutar las ope
 - La clase realiza las operaciones necesarias interactuando con la base de datos y validando la entrada del usuario.
 - Los resultados de las operaciones se reflejan en la base de datos y se muestran al usuario.
 Estas clases encapsulan la lógica de negocio del sistema, asegurando que las operaciones se realicen de manera eficiente y organizada.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+### Instrucciones para Usar el Programa
+El sistema de Gestión de Barbería es una herramienta interactiva que permite administrar barberos, clientes, reservas y servicios de manera sencilla. Sigue estos pasos para utilizar el programa:
+#### 1. Inicio del Programa
+Ejecuta el programa desde tu entorno de desarrollo o terminal.
+Al iniciar, se mostrará un menú principal con las opciones disponibles.
+#### 2. Menú Principal
+El programa mostrará las siguientes opciones en pantalla:
+##### Gestionar barberos:
+Permite agregar, eliminar, listar barberos, asignar horarios y especialidades.
+- Gestionar clientes: Facilita el registro de clientes y la consulta de su historial de reservas.
+- Gestionar reservas: Proporciona herramientas para crear, confirmar, cancelar y completar reservas.
+- Gestionar servicios: Permite definir servicios, establecer precios y duración, y asignarlos a barberos.
+- Salir: Finaliza el programa y guarda automáticamente los datos.
+#### 3. Selección de Opciones
+Ingresa el número correspondiente a la opción que deseas realizar.
+Sigue las instrucciones que aparecerán en pantalla para completar la operación.
+#### 4. Finalización
+Para salir del programa, selecciona la opción "5. Salir".
+El sistema guardará automáticamente todos los datos antes de cerrar.
+Con estas instrucciones, podrás utilizar el sistema de Gestión de Barbería de manera rápida y sencilla.
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Este es el digrama UML para las clases del sistema de gestión de reservas en una barbería
 ![image](https://github.com/user-attachments/assets/975f0006-340f-4df0-adc5-82663e1dd0dd)
 -------------------------------------------------------------------
