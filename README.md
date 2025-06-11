@@ -1,5 +1,5 @@
 Este es el digrama UML para las clases del sistema de gestión de reservas en una barbería
-![uml-Barberia](https://github.com/user-attachments/assets/be32fed5-7985-4a7f-8db0-557799e271e9)
+![image](https://github.com/user-attachments/assets/975f0006-340f-4df0-adc5-82663e1dd0dd)
 -------------------------------------------------------------------
 # 📖 Documentación de Clases
 
