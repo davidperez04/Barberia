@@ -1,4 +1,4 @@
-package menu_temp;
+package menu;
 
 import controller.ReservaController;
 import datos.BaseDeDatos;
