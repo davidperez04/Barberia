@@ -84,12 +84,9 @@ public class Horario implements Serializable {
     @Override
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return "Horario{" +
-               "id=" + id +
-               ", fecha=" + (fecha != null ? sdf.format(fecha) : "null") +
-               ", horaInicio='" + horaInicio + '\'' +
-               ", horaFin='" + horaFin + '\'' +
-               ", disponible=" + disponible +
-               '}';
+        return "fecha=" + (fecha != null ? sdf.format(fecha) : "null") +
+               ", Inicio='" + horaInicio + '\'' +
+               ", Fin='" + horaFin + '\'' +
+               ", disponible=" + disponible;
     }
 }

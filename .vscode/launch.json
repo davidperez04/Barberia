@@ -9,6 +9,13 @@
             "name": "InterfazGrafica",
             "request": "launch",
             "mainClass": "gui.InterfazGrafica",
+            "projectName": "Barberia_9b5400c4"
+        },
+        {
+            "type": "java",
+            "name": "InterfazGrafica",
+            "request": "launch",
+            "mainClass": "gui.InterfazGrafica",
             "projectName": "Barberia_fa6e0da7"
         },
         {
