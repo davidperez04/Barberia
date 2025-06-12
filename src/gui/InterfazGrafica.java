@@ -4,7 +4,6 @@ import datos.BaseDeDatos;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,7 +20,7 @@ import modelo.Reserva;
 import modelo.Servicio;
 
 public class InterfazGrafica extends JFrame {
-   private BaseDeDatos bd = new BaseDeDatos();
+   private BaseDeDatos baseDatos = new BaseDeDatos();
 
    public InterfazGrafica() {
       this.setTitle("Sistema de Barbería");
@@ -38,250 +37,242 @@ public class InterfazGrafica extends JFrame {
    }
 
    private JPanel crearPanelBarberos() {
-    JPanel panel = new JPanel(new BorderLayout());
-    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Nombre"}, 0);
-    JTable table = new JTable(model);
-    Iterator var5 = this.bd.obtenerTodosLosBarberos().iterator();
+      JPanel panel = new JPanel(new BorderLayout());
+      DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Nombre"}, 0);
+      JTable table = new JTable(model);
 
-    while (var5.hasNext()) {
-        Barbero b = (Barbero) var5.next();
-        model.addRow(new Object[]{b.getId(), b.getNombre()});
-    }
+      for (Barbero barbero : this.baseDatos.obtenerTodosLosBarberos()) {
+         model.addRow(new Object[]{barbero.getId(), barbero.getNombre()});
+      }
 
-    JButton agregar = new JButton("Agregar Barbero");
-    agregar.addActionListener((e) -> {
-        String nombre = this.solicitarSoloLetras("Nombre del barbero:");
-        if (nombre == null || nombre.trim().isEmpty()) {
+      JButton agregar = new JButton("Agregar Barbero");
+      agregar.addActionListener(_ -> {
+         String nombre = this.solicitarSoloLetras("Nombre del barbero:");
+         if (nombre == null || nombre.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
             return;
-        }
-        String telefono = this.solicitarSoloNumeros("Teléfono del barbero:");
-        if (telefono == null || telefono.trim().isEmpty()) {
+         }
+         String telefono = this.solicitarSoloNumeros("Teléfono del barbero:");
+         if (telefono == null || telefono.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El teléfono es obligatorio.");
             return;
-        }
-        String correo = this.solicitarCorreo("Email del barbero:");
-        if (correo == null || correo.trim().isEmpty()) {
+         }
+         String correo = this.solicitarCorreo("Email del barbero:");
+         if (correo == null || correo.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El correo es obligatorio.");
             return;
-        }
-        Barbero nuevo = new Barbero(this.bd.getNextBarberoId(), nombre, telefono);
-        this.bd.agregarBarbero(nuevo);
-        model.addRow(new Object[]{nuevo.getId(), nombre});
-    });
+         }
+         Barbero nuevo = new Barbero(this.baseDatos.getNextBarberoId(), nombre, telefono);
+         this.baseDatos.agregarBarbero(nuevo);
+         model.addRow(new Object[]{nuevo.getId(), nombre});
+      });
 
-    JButton eliminar = new JButton("Eliminar Seleccionado");
-    eliminar.addActionListener((e) -> {
-        int fila = table.getSelectedRow();
-        if (fila >= 0) {
+      JButton eliminar = new JButton("Eliminar Seleccionado");
+      eliminar.addActionListener(_ -> {
+         int fila = table.getSelectedRow();
+         if (fila >= 0) {
             int id = (Integer) model.getValueAt(fila, 0);
-            this.bd.eliminarBarbero(id);
+            this.baseDatos.eliminarBarbero(id);
             model.removeRow(fila);
-        } else {
+         } else {
             JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
-        }
-    });
-    JPanel botones = new JPanel();
-    botones.add(agregar);
-    botones.add(eliminar);
-    panel.add(new JScrollPane(table), "Center");
-    panel.add(botones, "South");
-    return panel;
-}
+         }
+      });
+      JPanel botones = new JPanel();
+      botones.add(agregar);
+      botones.add(eliminar);
+      panel.add(new JScrollPane(table), "Center");
+      panel.add(botones, "South");
+      return panel;
+   }
 
-private JPanel crearPanelClientes() {
-    JPanel panel = new JPanel(new BorderLayout());
-    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Nombre"}, 0);
-    JTable table = new JTable(model);
-    Iterator var5 = this.bd.obtenerTodosLosClientes().iterator();
+   private JPanel crearPanelClientes() {
+      JPanel panel = new JPanel(new BorderLayout());
+      DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Nombre"}, 0);
+      JTable table = new JTable(model);
 
-    while (var5.hasNext()) {
-        Cliente c = (Cliente) var5.next();
-        model.addRow(new Object[]{c.getId(), c.getNombre()});
-    }
+      for (Cliente cliente : this.baseDatos.obtenerTodosLosClientes()) {
+         model.addRow(new Object[]{cliente.getId(), cliente.getNombre()});
+      }
 
-    JButton agregar = new JButton("Agregar Cliente");
-    agregar.addActionListener((e) -> {
-        String nombre = this.solicitarSoloLetras("Nombre del cliente:");
-        if (nombre == null || nombre.trim().isEmpty()) {
+      JButton agregar = new JButton("Agregar Cliente");
+      agregar.addActionListener(_ -> {
+         String nombre = this.solicitarSoloLetras("Nombre del cliente:");
+         if (nombre == null || nombre.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
             return;
-        }
-        String telefono = this.solicitarSoloNumeros("Teléfono del cliente:");
-        if (telefono == null || telefono.trim().isEmpty()) {
+         }
+         String telefono = this.solicitarSoloNumeros("Teléfono del cliente:");
+         if (telefono == null || telefono.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El teléfono es obligatorio.");
             return;
-        }
-        String email = this.solicitarCorreo("Email del cliente:");
-        if (email == null || email.trim().isEmpty()) {
+         }
+         String email = this.solicitarCorreo("Email del cliente:");
+         if (email == null || email.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El correo es obligatorio.");
             return;
-        }
-        Cliente nuevo = new Cliente(this.bd.getNextClienteId(), nombre, telefono, email);
-        this.bd.agregarCliente(nuevo);
-        model.addRow(new Object[]{nuevo.getId(), nombre});
-    });
+         }
+         Cliente nuevo = new Cliente(this.baseDatos.getNextClienteId(), nombre, telefono, email);
+         this.baseDatos.agregarCliente(nuevo);
+         model.addRow(new Object[]{nuevo.getId(), nombre});
+      });
 
-    JButton eliminar = new JButton("Eliminar Seleccionado");
-    eliminar.addActionListener((e) -> {
-        int fila = table.getSelectedRow();
-        if (fila >= 0) {
+      JButton eliminar = new JButton("Eliminar Seleccionado");
+      eliminar.addActionListener(_ -> {
+         int fila = table.getSelectedRow();
+         if (fila >= 0) {
             int id = (Integer) model.getValueAt(fila, 0);
-            this.bd.eliminarCliente(id);
+            this.baseDatos.eliminarCliente(id);
             model.removeRow(fila);
-        } else {
+         } else {
             JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
-        }
-    });
-    JPanel botones = new JPanel();
-    botones.add(agregar);
-    botones.add(eliminar);
-    panel.add(new JScrollPane(table), "Center");
-    panel.add(botones, "South");
-    return panel;
-}
+         }
+      });
+      JPanel botones = new JPanel();
+      botones.add(agregar);
+      botones.add(eliminar);
+      panel.add(new JScrollPane(table), "Center");
+      panel.add(botones, "South");
+      return panel;
+   }
 
-private JPanel crearPanelServicios() {
-    JPanel panel = new JPanel(new BorderLayout());
-    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Nombre", "Precio", "Duración"}, 0);
-    JTable table = new JTable(model);
-    Iterator var5 = this.bd.obtenerTodosLosServicios().iterator();
+   private JPanel crearPanelServicios() {
+      JPanel panel = new JPanel(new BorderLayout());
+      DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Nombre", "Precio", "Duración"}, 0);
+      JTable table = new JTable(model);
 
-    while (var5.hasNext()) {
-        Servicio s = (Servicio) var5.next();
-        model.addRow(new Object[]{s.getId(), s.getNombre(), s.getPrecio(), s.getDuracionMinutos()});
-    }
+      for (Servicio servicio : this.baseDatos.obtenerTodosLosServicios()) {
+         model.addRow(new Object[]{servicio.getId(), servicio.getNombre(), servicio.getPrecio(), servicio.getDuracionMinutos()});
+      }
 
-    JButton agregar = new JButton("Agregar Servicio");
-    agregar.addActionListener((e) -> {
-        String nombre = this.solicitarSoloLetras("Nombre del servicio:");
-        if (nombre == null || nombre.trim().isEmpty()) {
+      JButton agregar = new JButton("Agregar Servicio");
+      agregar.addActionListener(_ -> {
+         String nombre = this.solicitarSoloLetras("Nombre del servicio:");
+         if (nombre == null || nombre.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
             return;
-        }
-        String descripcion = JOptionPane.showInputDialog(this, "Descripción del servicio:");
-        if (descripcion == null || descripcion.trim().isEmpty()) {
+         }
+         String descripcion = JOptionPane.showInputDialog(this, "Descripción del servicio:");
+         if (descripcion == null || descripcion.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "La descripción es obligatoria.");
             return;
-        }
-        String precioStr = this.solicitarSoloNumeros("Precio del servicio:");
-        if (precioStr == null || precioStr.trim().isEmpty()) {
+         }
+         String precioStr = this.solicitarSoloNumeros("Precio del servicio:");
+         if (precioStr == null || precioStr.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El precio es obligatorio.");
             return;
-        }
-        String duracionStr = this.solicitarSoloNumeros("Duración en minutos:");
-        if (duracionStr == null || duracionStr.trim().isEmpty()) {
+         }
+         String duracionStr = this.solicitarSoloNumeros("Duración en minutos:");
+         if (duracionStr == null || duracionStr.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "La duración es obligatoria.");
             return;
-        }
-        try {
+         }
+         try {
             double precio = Double.parseDouble(precioStr);
             int duracion = Integer.parseInt(duracionStr);
-            Servicio s = new Servicio(this.bd.getNextServicioId(), nombre, descripcion, precio, duracion);
-            this.bd.agregarServicio(s);
-            model.addRow(new Object[]{s.getId(), nombre, precio, duracion});
-        } catch (Exception ex) {
+            Servicio servicio = new Servicio(this.baseDatos.getNextServicioId(), nombre, descripcion, precio, duracion);
+            this.baseDatos.agregarServicio(servicio);
+            model.addRow(new Object[]{servicio.getId(), nombre, precio, duracion});
+         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Datos inválidos.");
-        }
-    });
+         }
+      });
 
-    JButton eliminar = new JButton("Eliminar Seleccionado");
-    eliminar.addActionListener((e) -> {
-        int fila = table.getSelectedRow();
-        if (fila >= 0) {
+      JButton eliminar = new JButton("Eliminar Seleccionado");
+      eliminar.addActionListener(_ -> {
+         int fila = table.getSelectedRow();
+         if (fila >= 0) {
             int id = (Integer) model.getValueAt(fila, 0);
-            this.bd.eliminarServicio(id);
+            this.baseDatos.eliminarServicio(id);
             model.removeRow(fila);
-        } else {
+         } else {
             JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
-        }
-    });
-    JPanel botones = new JPanel();
-    botones.add(agregar);
-    botones.add(eliminar);
-    panel.add(new JScrollPane(table), "Center");
-    panel.add(botones, "South");
-    return panel;
-}
+         }
+      });
+      JPanel botones = new JPanel();
+      botones.add(agregar);
+      botones.add(eliminar);
+      panel.add(new JScrollPane(table), "Center");
+      panel.add(botones, "South");
+      return panel;
+   }
 
-private JPanel crearPanelReservas() {
-    JPanel panel = new JPanel(new BorderLayout());
-    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Cliente", "Barbero", "Servicio", "Precio", "Fecha"}, 0);
-    JTable table = new JTable(model);
-    Iterator var5 = this.bd.obtenerTodasLasReservas().iterator();
+   private JPanel crearPanelReservas() {
+      JPanel panel = new JPanel(new BorderLayout());
+      DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Cliente", "Barbero", "Servicio", "Precio", "Fecha"}, 0);
+      JTable table = new JTable(model);
 
-    while (var5.hasNext()) {
-        Reserva r = (Reserva) var5.next();
-        String nombreServicio = "";
-        String precioServicio = "";
-        // Primero intenta obtener el servicio principal
-        if (r.getServicio() != null) {
-            nombreServicio = r.getServicio().getNombre();
-            precioServicio = String.valueOf(r.getServicio().getPrecio());
-        } else if (r.getServicios() != null && !r.getServicios().isEmpty()) {
+      for (Reserva reserva : this.baseDatos.obtenerTodasLasReservas()) {
+         String nombreServicio = "";
+         String precioServicio = "";
+         // Primero intenta obtener el servicio principal
+         if (reserva.getServicio() != null) {
+            nombreServicio = reserva.getServicio().getNombre();
+            precioServicio = String.valueOf(reserva.getServicio().getPrecio());
+         } else if (reserva.getServicios() != null && !reserva.getServicios().isEmpty()) {
             // Si no hay servicio principal, toma el primero de la lista
-            Servicio s = r.getServicios().get(0);
-            nombreServicio = s.getNombre();
-            precioServicio = String.valueOf(s.getPrecio());
-        }
-        model.addRow(new Object[]{
-            r.getIdReserva(),
-            r.getCliente() != null ? r.getCliente().getNombre() : "",
-            r.getBarbero() != null ? r.getBarbero().getNombre() : "",
+            Servicio servicio = reserva.getServicios().get(0);
+            nombreServicio = servicio.getNombre();
+            precioServicio = String.valueOf(servicio.getPrecio());
+         }
+         model.addRow(new Object[]{
+            reserva.getIdReserva(),
+            reserva.getCliente() != null ? reserva.getCliente().getNombre() : "",
+            reserva.getBarbero() != null ? reserva.getBarbero().getNombre() : "",
             nombreServicio,
             precioServicio,
-            r.getFechaHora() != null ? r.getFechaHora().toString() : ""
-        });
-    }
+            reserva.getFechaHora() != null ? reserva.getFechaHora().toString() : ""
+         });
+      }
 
-    JButton agregar = new JButton("Agregar Reserva");
-    agregar.addActionListener((e) -> {
-        if (!this.bd.obtenerTodosLosClientes().isEmpty() && !this.bd.obtenerTodosLosBarberos().isEmpty() && !this.bd.obtenerTodosLosServicios().isEmpty()) {
-            Cliente cliente = (Cliente) JOptionPane.showInputDialog(this, "Selecciona el cliente:", "Cliente", 3, (Icon) null, this.bd.obtenerTodosLosClientes().toArray(), (Object) null);
-            Barbero barbero = (Barbero) JOptionPane.showInputDialog(this, "Selecciona el barbero:", "Barbero", 3, (Icon) null, this.bd.obtenerTodosLosBarberos().toArray(), (Object) null);
-            Servicio servicio = (Servicio) JOptionPane.showInputDialog(this, "Selecciona el servicio:", "Servicio", 3, (Icon) null, this.bd.obtenerTodosLosServicios().toArray(), (Object) null);
+      JButton agregar = new JButton("Agregar Reserva");
+      agregar.addActionListener(_ -> {
+         if (!this.baseDatos.obtenerTodosLosClientes().isEmpty() && !this.baseDatos.obtenerTodosLosBarberos().isEmpty() && !this.baseDatos.obtenerTodosLosServicios().isEmpty()) {
+            Cliente cliente = (Cliente) JOptionPane.showInputDialog(this, "Selecciona el cliente:", "Cliente", 3, (Icon) null, this.baseDatos.obtenerTodosLosClientes().toArray(), (Object) null);
+            Barbero barbero = (Barbero) JOptionPane.showInputDialog(this, "Selecciona el barbero:", "Barbero", 3, (Icon) null, this.baseDatos.obtenerTodosLosBarberos().toArray(), (Object) null);
+            Servicio servicio = (Servicio) JOptionPane.showInputDialog(this, "Selecciona el servicio:", "Servicio", 3, (Icon) null, this.baseDatos.obtenerTodosLosServicios().toArray(), (Object) null);
             String fechaStr = JOptionPane.showInputDialog(this, "Ingresa la fecha y hora (AAAA-MM-DDTHH:MM):", LocalDateTime.now().toString().substring(0, 16));
 
             try {
-                LocalDateTime fecha = LocalDateTime.parse(fechaStr);
-                if (cliente != null && barbero != null && servicio != null) {
-                    Reserva reserva = new Reserva(this.bd.getNextReservaId(), fecha, cliente, barbero, servicio);
-                    this.bd.agregarReserva(reserva);
-                    model.addRow(new Object[]{
-                        reserva.getIdReserva(),
-                        cliente.getNombre(),
-                        barbero.getNombre(),
-                        servicio.getNombre(),
-                        servicio.getPrecio(),
-                        fecha.toString()
-                    });
-                }
+               LocalDateTime fecha = LocalDateTime.parse(fechaStr);
+               if (cliente != null && barbero != null && servicio != null) {
+                  Reserva reserva = new Reserva(this.baseDatos.getNextReservaId(), fecha, cliente, barbero, servicio);
+                  this.baseDatos.agregarReserva(reserva);
+                  model.addRow(new Object[]{
+                     reserva.getIdReserva(),
+                     cliente.getNombre(),
+                     barbero.getNombre(),
+                     servicio.getNombre(),
+                     servicio.getPrecio(),
+                     fecha.toString()
+                  });
+               }
             } catch (Exception var9) {
-                JOptionPane.showMessageDialog(this, "Fecha inválida. Debe estar en el formato AAAA-MM-DDTHH:MM");
+               JOptionPane.showMessageDialog(this, "Fecha inválida. Debe estar en el formato AAAA-MM-DDTHH:MM");
             }
 
-        } else {
+         } else {
             JOptionPane.showMessageDialog(this, "Debe haber al menos un cliente, barbero y servicio registrado.");
-        }
-    });
-    JButton eliminar = new JButton("Eliminar Seleccionado");
-    eliminar.addActionListener((e) -> {
-        int fila = table.getSelectedRow();
-        if (fila >= 0) {
+         }
+      });
+      JButton eliminar = new JButton("Eliminar Seleccionado");
+      eliminar.addActionListener(_ -> {
+         int fila = table.getSelectedRow();
+         if (fila >= 0) {
             int id = (Integer) model.getValueAt(fila, 0);
-            this.bd.eliminarReserva(id);
+            this.baseDatos.eliminarReserva(id);
             model.removeRow(fila);
-        } else {
+         } else {
             JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
-        }
-    });
-    JPanel botones = new JPanel();
-    botones.add(agregar);
-    botones.add(eliminar);
-    panel.add(new JScrollPane(table), "Center");
-    panel.add(botones, "South");
-    return panel;
-}
+         }
+      });
+      JPanel botones = new JPanel();
+      botones.add(agregar);
+      botones.add(eliminar);
+      panel.add(new JScrollPane(table), "Center");
+      panel.add(botones, "South");
+      return panel;
+   }
 
    private String solicitarSoloLetras(String mensaje) {
       while(true) {
