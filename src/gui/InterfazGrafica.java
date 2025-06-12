@@ -412,105 +412,151 @@ private void ajustarAlturaFila(JTable table, int fila, int columna) {
     return panel;
 }
    private JPanel crearPanelReservas() {
-      JPanel panel = new JPanel(new BorderLayout());
-      // Agrega la columna "Estado"
-      DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Cliente", "Barbero", "Servicio", "Precio", "Fecha", "Estado"}, 0);
-      JTable table = new JTable(model);
+    JPanel panel = new JPanel(new BorderLayout());
+    DefaultTableModel model = new DefaultTableModel(
+        new String[]{"ID", "Cliente", "Barbero", "Servicio", "Precio", "Fecha y Hora", "Estado"}, 0
+    );
+    JTable table = new JTable(model);
 
-      for (Reserva reserva : this.baseDatos.obtenerTodasLasReservas()) {
-         String nombreServicio = "";
-         String precioServicio = "";
-         if (reserva.getServicio() != null) {
-            nombreServicio = reserva.getServicio().getNombre();
-            precioServicio = String.valueOf(reserva.getServicio().getPrecio());
-         } else if (reserva.getServicios() != null && !reserva.getServicios().isEmpty()) {
-            Servicio servicio = reserva.getServicios().get(0);
-            nombreServicio = servicio.getNombre();
-            precioServicio = String.valueOf(servicio.getPrecio());
-         }
-         // Agrega el estado a la fila
-         model.addRow(new Object[]{
+    // Llenar la tabla con las reservas existentes
+    for (Reserva reserva : this.baseDatos.obtenerTodasLasReservas()) {
+        model.addRow(new Object[]{
             reserva.getIdReserva(),
-            reserva.getCliente() != null ? reserva.getCliente().getNombre() : "",
-            reserva.getBarbero() != null ? reserva.getBarbero().getNombre() : "",
-            nombreServicio,
-            precioServicio,
-            reserva.getFechaHora() != null ? reserva.getFechaHora().toString() : "",
-            reserva.getEstado() != null ? reserva.getEstado().name() : ""
-         });
-      }
+            reserva.getCliente().getNombre(),
+            reserva.getBarbero().getNombre(),
+            reserva.getServicio().getNombre(),
+            reserva.getServicio().getPrecio(),
+            reserva.getFechaHora().toString(),
+            reserva.getEstado().toString()
+        });
+    }
 
-      JButton agregar = new JButton("Agregar Reserva");
-      agregar.addActionListener(e -> {
-         if (!this.baseDatos.obtenerTodosLosClientes().isEmpty() && !this.baseDatos.obtenerTodosLosBarberos().isEmpty() && !this.baseDatos.obtenerTodosLosServicios().isEmpty()) {
-            Cliente cliente = (Cliente) JOptionPane.showInputDialog(this, "Selecciona el cliente:", "Cliente", 3, (Icon) null, this.baseDatos.obtenerTodosLosClientes().toArray(), (Object) null);
-            Barbero barbero = (Barbero) JOptionPane.showInputDialog(this, "Selecciona el barbero:", "Barbero", 3, (Icon) null, this.baseDatos.obtenerTodosLosBarberos().toArray(), (Object) null);
-            Servicio servicio = (Servicio) JOptionPane.showInputDialog(this, "Selecciona el servicio:", "Servicio", 3, (Icon) null, this.baseDatos.obtenerTodosLosServicios().toArray(), (Object) null);
-            String fechaStr = JOptionPane.showInputDialog(this, "Ingresa la fecha y hora (AAAA-MM-DDTHH:MM):", LocalDateTime.now().toString().substring(0, 16));
+    JButton agregar = new JButton("Agregar Reserva");
+    agregar.addActionListener(e -> {
+        if (!this.baseDatos.obtenerTodosLosClientes().isEmpty() &&
+            !this.baseDatos.obtenerTodosLosBarberos().isEmpty() &&
+            !this.baseDatos.obtenerTodosLosServicios().isEmpty()) {
+
+            // Selección de cliente
+            Cliente cliente = (Cliente) JOptionPane.showInputDialog(
+                this, "Selecciona el cliente:", "Cliente",
+                JOptionPane.QUESTION_MESSAGE, null,
+                this.baseDatos.obtenerTodosLosClientes().toArray(), null);
+
+            // Selección de barbero con tooltip de horarios
+            java.util.List<Barbero> listaBarberos = this.baseDatos.obtenerTodosLosBarberos();
+            javax.swing.JComboBox<Barbero> comboBarberos = new javax.swing.JComboBox<>(listaBarberos.toArray(new Barbero[0]));
+            comboBarberos.setRenderer(new javax.swing.plaf.basic.BasicComboBoxRenderer() {
+                @Override
+                public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    if (value instanceof Barbero) {
+                        Barbero b = (Barbero) value;
+                        setText(b.getNombre() + " (" + b.getTelefono() + ")");
+                    }
+                    return this;
+                }
+            });
+            comboBarberos.addActionListener(ev -> {
+                Barbero seleccionado = (Barbero) comboBarberos.getSelectedItem();
+                if (seleccionado != null) {
+                    StringBuilder horarios = new StringBuilder();
+                    for (modelo.Horario h : seleccionado.getHorarioTrabajo()) {
+                        horarios.append(h.toString()).append("<br>");
+                    }
+                    comboBarberos.setToolTipText("<html>" + horarios.toString() + "</html>");
+                }
+            });
+            // Inicializa el tooltip para el primer barbero
+            if (!listaBarberos.isEmpty()) {
+                Barbero seleccionado = listaBarberos.get(0);
+                StringBuilder horarios = new StringBuilder();
+                for (modelo.Horario h : seleccionado.getHorarioTrabajo()) {
+                    horarios.append(h.toString()).append("<br>");
+                }
+                comboBarberos.setToolTipText("<html>" + horarios.toString() + "</html>");
+            }
+            int barberoResult = JOptionPane.showConfirmDialog(
+                this, comboBarberos, "Selecciona el barbero", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            Barbero barbero = (barberoResult == JOptionPane.OK_OPTION) ? (Barbero) comboBarberos.getSelectedItem() : null;
+
+            // Selección de servicio
+            Servicio servicio = (Servicio) JOptionPane.showInputDialog(
+                this, "Selecciona el servicio:", "Servicio",
+                JOptionPane.QUESTION_MESSAGE, null,
+                this.baseDatos.obtenerTodosLosServicios().toArray(), null);
+
+            String fechaStr = JOptionPane.showInputDialog(
+                this, "Ingresa la fecha y hora (AAAA-MM-DDTHH:MM):",
+                java.time.LocalDateTime.now().toString().substring(0, 16));
 
             try {
-               LocalDateTime fecha = LocalDateTime.parse(fechaStr);
-               if (cliente != null && barbero != null && servicio != null) {
-                  // Verifica si el barbero tiene un horario disponible para esa fecha y hora
-                  boolean disponible = false;
-                  for (modelo.Horario h : barbero.getHorarioTrabajo()) {
-                     java.time.LocalDate localDate = h.getFecha().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
-                     if (localDate.equals(fecha.toLocalDate()) && h.isDisponible()) {
-                        java.time.LocalTime inicio = java.time.LocalTime.parse(h.getHoraInicio());
-                        java.time.LocalTime fin = java.time.LocalTime.parse(h.getHoraFin());
-                        java.time.LocalTime horaReserva = fecha.toLocalTime();
-                        if (!horaReserva.isBefore(inicio) && horaReserva.isBefore(fin)) {
-                           disponible = true;
-                           h.setDisponible(false); // Marca como ocupado
-                           break;
+                java.time.LocalDateTime fecha = java.time.LocalDateTime.parse(fechaStr);
+                if (cliente != null && barbero != null && servicio != null) {
+                    // Verifica si el barbero tiene un horario disponible para esa fecha y hora
+                    boolean disponible = false;
+                    for (modelo.Horario h : barbero.getHorarioTrabajo()) {
+                        java.time.LocalDate localDate = h.getFecha().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                        if (localDate.equals(fecha.toLocalDate()) && h.isDisponible()) {
+                            java.time.LocalTime inicio = java.time.LocalTime.parse(h.getHoraInicio());
+                            java.time.LocalTime fin = java.time.LocalTime.parse(h.getHoraFin());
+                            java.time.LocalTime horaReserva = fecha.toLocalTime();
+                            if (!horaReserva.isBefore(inicio) && horaReserva.isBefore(fin)) {
+                                disponible = true;
+                                h.setDisponible(false); // Marca como ocupado
+                                break;
+                            }
                         }
-                     }
-                  }
-                  String estado = disponible ? "CONFIRMADA" : "NO DISPONIBLE";
-                  Reserva reserva = new Reserva(this.baseDatos.getNextReservaId(), fecha, cliente, barbero, servicio);
-                  reserva.setEstado(disponible ? modelo.EstadoReserva.CONFIRMADA : modelo.EstadoReserva.PENDIENTE);
-                  if (disponible) {
-                     this.baseDatos.agregarReserva(reserva);
-                  }
-                  model.addRow(new Object[]{
-                     reserva.getIdReserva(),
-                     cliente.getNombre(),
-                     barbero.getNombre(),
-                     servicio.getNombre(),
-                     servicio.getPrecio(),
-                     fecha.toString(),
-                     estado
-                  });
-                  if (!disponible) {
-                     JOptionPane.showMessageDialog(this, "No hay horario disponible para esa fecha y hora. Reserva no confirmada.");
-                  }
-               }
-            } catch (Exception var9) {
-               JOptionPane.showMessageDialog(this, "Fecha inválida. Debe estar en el formato AAAA-MM-DDTHH:MM");
+                    }
+                    String estado = disponible ? "CONFIRMADA" : "NO DISPONIBLE";
+                    Reserva reserva = new Reserva(this.baseDatos.getNextReservaId(), fecha, cliente, barbero, servicio);
+                    reserva.setEstado(disponible ? modelo.EstadoReserva.CONFIRMADA : modelo.EstadoReserva.PENDIENTE);
+                    if (disponible) {
+                        this.baseDatos.agregarReserva(reserva);
+                    }
+                    model.addRow(new Object[]{
+                        reserva.getIdReserva(),
+                        cliente.getNombre(),
+                        barbero.getNombre(),
+                        servicio.getNombre(),
+                        servicio.getPrecio(),
+                        fecha.toString(),
+                        estado
+                    });
+                    if (!disponible) {
+                        JOptionPane.showMessageDialog(this, "No hay horario disponible para esa fecha y hora. Reserva no confirmada.");
+                    }
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Fecha inválida. Debe estar en el formato AAAA-MM-DDTHH:MM");
             }
-
-         } else {
+        } else {
             JOptionPane.showMessageDialog(this, "Debe haber al menos un cliente, barbero y servicio registrado.");
-         }
-      });
-      JButton eliminar = new JButton("Eliminar Seleccionado");
-      eliminar.addActionListener(e -> {
-         int fila = table.getSelectedRow();
-         if (fila >= 0) {
-            int id = (Integer) model.getValueAt(fila, 0);
-            this.baseDatos.eliminarReserva(id);
+        }
+    });
+
+    JButton eliminar = new JButton("Eliminar Seleccionado");
+    eliminar.addActionListener(e -> {
+        int fila = table.getSelectedRow();
+        if (fila != -1) {
+            int idReserva = (int) model.getValueAt(fila, 0);
+            this.baseDatos.eliminarReserva(idReserva);
             model.removeRow(fila);
-         } else {
-            JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
-         }
-      });
-      JPanel botones = new JPanel();
-      botones.add(agregar);
-      botones.add(eliminar);
-      panel.add(new JScrollPane(table), "Center");
-      panel.add(botones, "South");
-      return panel;
-   }
+        }
+    });
+
+    JPanel botones = new JPanel();
+    botones.add(agregar);
+    botones.add(eliminar);
+
+    JScrollPane scroll = new JScrollPane(table);
+    scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+    panel.add(scroll, BorderLayout.CENTER);
+    panel.add(botones, BorderLayout.SOUTH);
+    return panel;
+    }
 
    private String solicitarSoloLetras(String mensaje) {
       while(true) {
