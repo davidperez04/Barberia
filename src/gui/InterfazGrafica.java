@@ -293,67 +293,116 @@ private void ajustarAlturaFila(JTable table, int fila, int columna) {
       return panel;
    }
 
-   private JPanel crearPanelServicios() {
-      JPanel panel = new JPanel(new BorderLayout());
-      DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Nombre", "Precio", "Duración"}, 0);
-      JTable table = new JTable(model);
+  private JPanel crearPanelServicios() {
+    JPanel panel = new JPanel(new BorderLayout());
+    // Agregamos la columna "Descripción"
+    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Nombre", "Descripción", "Precio", "Duración"}, 0);
+    JTable table = new JTable(model) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
 
-      for (Servicio servicio : this.baseDatos.obtenerTodosLosServicios()) {
-         model.addRow(new Object[]{servicio.getId(), servicio.getNombre(), servicio.getPrecio(), servicio.getDuracionMinutos()});
-      }
+    // Renderizador para mostrar saltos de línea en la columna de descripción
+    table.getColumnModel().getColumn(2).setCellRenderer((table1, value, isSelected, hasFocus, row, column) -> {
+        javax.swing.JTextArea area = new javax.swing.JTextArea();
+        area.setText(value != null ? value.toString() : "");
+        area.setWrapStyleWord(true);
+        area.setLineWrap(true);
+        area.setOpaque(true);
+        if (isSelected) {
+            area.setBackground(table1.getSelectionBackground());
+            area.setForeground(table1.getSelectionForeground());
+        } else {
+            area.setBackground(table1.getBackground());
+            area.setForeground(table1.getForeground());
+        }
+        return area;
+    });
 
-      JButton agregar = new JButton("Agregar Servicio");
-      agregar.addActionListener(e -> {
-         String nombre = this.solicitarSoloLetras("Nombre del servicio:");
-         if (nombre == null || nombre.trim().isEmpty()) {
+    for (Servicio servicio : this.baseDatos.obtenerTodosLosServicios()) {
+        model.addRow(new Object[]{
+            servicio.getId(),
+            servicio.getNombre(),
+            servicio.getDescripcion(),
+            servicio.getPrecio(),
+            servicio.getDuracionMinutos()
+        });
+    }
+
+    // Ajustar el ancho de las columnas y permitir que la tabla se expanda con el panel
+    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    table.getColumnModel().getColumn(0).setPreferredWidth(40);   // ID
+    table.getColumnModel().getColumn(1).setPreferredWidth(120);  // Nombre
+    table.getColumnModel().getColumn(2).setPreferredWidth(300);  // Descripción (más ancha)
+    table.getColumnModel().getColumn(3).setPreferredWidth(70);   // Precio
+    table.getColumnModel().getColumn(4).setPreferredWidth(70);   // Duración
+
+    // Ajustar altura de todas las filas según el contenido de la columna de descripción
+    for (int i = 0; i < model.getRowCount(); i++) {
+        ajustarAlturaFila(table, i, 2);
+    }
+
+    JButton agregar = new JButton("Agregar Servicio");
+    agregar.addActionListener(e -> {
+        String nombre = this.solicitarSoloLetras("Nombre del servicio:");
+        if (nombre == null || nombre.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
             return;
-         }
-         String descripcion = JOptionPane.showInputDialog(this, "Descripción del servicio:");
-         if (descripcion == null || descripcion.trim().isEmpty()) {
+        }
+        String descripcion = JOptionPane.showInputDialog(this, "Descripción del servicio:");
+        if (descripcion == null || descripcion.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "La descripción es obligatoria.");
             return;
-         }
-         String precioStr = this.solicitarSoloNumeros("Precio del servicio:");
-         if (precioStr == null || precioStr.trim().isEmpty()) {
+        }
+        String precioStr = this.solicitarSoloNumeros("Precio del servicio:");
+        if (precioStr == null || precioStr.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El precio es obligatorio.");
             return;
-         }
-         String duracionStr = this.solicitarSoloNumeros("Duración en minutos:");
-         if (duracionStr == null || duracionStr.trim().isEmpty()) {
+        }
+        String duracionStr = this.solicitarSoloNumeros("Duración en minutos:");
+        if (duracionStr == null || duracionStr.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "La duración es obligatoria.");
             return;
-         }
-         try {
+        }
+        try {
             double precio = Double.parseDouble(precioStr);
             int duracion = Integer.parseInt(duracionStr);
             Servicio servicio = new Servicio(this.baseDatos.getNextServicioId(), nombre, descripcion, precio, duracion);
             this.baseDatos.agregarServicio(servicio);
-            model.addRow(new Object[]{servicio.getId(), nombre, precio, duracion});
-         } catch (Exception ex) {
+            model.addRow(new Object[]{servicio.getId(), nombre, descripcion, precio, duracion});
+            // Ajustar altura de la nueva fila por si la descripción es larga
+            ajustarAlturaFila(table, model.getRowCount() - 1, 2);
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Datos inválidos.");
-         }
-      });
+        }
+    });
 
-      JButton eliminar = new JButton("Eliminar Seleccionado");
-      eliminar.addActionListener(e -> {
-         int fila = table.getSelectedRow();
-         if (fila >= 0) {
+    JButton eliminar = new JButton("Eliminar Seleccionado");
+    eliminar.addActionListener(e -> {
+        int fila = table.getSelectedRow();
+        if (fila >= 0) {
             int id = (Integer) model.getValueAt(fila, 0);
             this.baseDatos.eliminarServicio(id);
             model.removeRow(fila);
-         } else {
+        } else {
             JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
-         }
-      });
-      JPanel botones = new JPanel();
-      botones.add(agregar);
-      botones.add(eliminar);
-      panel.add(new JScrollPane(table), "Center");
-      panel.add(botones, "South");
-      return panel;
-   }
+        }
+    });
 
+    JPanel botones = new JPanel();
+    botones.add(agregar);
+    botones.add(eliminar);
+
+    JScrollPane scroll = new JScrollPane(table);
+    scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+    panel.add(scroll, BorderLayout.CENTER);
+    panel.add(botones, BorderLayout.SOUTH);
+    return panel;
+}
    private JPanel crearPanelReservas() {
       JPanel panel = new JPanel(new BorderLayout());
       DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Cliente", "Barbero", "Servicio", "Precio", "Fecha"}, 0);
