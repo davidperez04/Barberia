@@ -1,7 +1,7 @@
 package app;
 
 import datos.BaseDeDatos;
-import menu.*;
+import Menu.*;
 
 import java.util.Scanner;
 

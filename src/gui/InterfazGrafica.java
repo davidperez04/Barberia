@@ -46,7 +46,7 @@ public class InterfazGrafica extends JFrame {
       }
 
       JButton agregar = new JButton("Agregar Barbero");
-      agregar.addActionListener(_ -> {
+      agregar.addActionListener(e -> {
          String nombre = this.solicitarSoloLetras("Nombre del barbero:");
          if (nombre == null || nombre.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
@@ -68,7 +68,7 @@ public class InterfazGrafica extends JFrame {
       });
 
       JButton eliminar = new JButton("Eliminar Seleccionado");
-      eliminar.addActionListener(_ -> {
+      eliminar.addActionListener(e -> {
          int fila = table.getSelectedRow();
          if (fila >= 0) {
             int id = (Integer) model.getValueAt(fila, 0);
@@ -96,7 +96,7 @@ public class InterfazGrafica extends JFrame {
       }
 
       JButton agregar = new JButton("Agregar Cliente");
-      agregar.addActionListener(_ -> {
+      agregar.addActionListener(e -> {
          String nombre = this.solicitarSoloLetras("Nombre del cliente:");
          if (nombre == null || nombre.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
@@ -118,7 +118,7 @@ public class InterfazGrafica extends JFrame {
       });
 
       JButton eliminar = new JButton("Eliminar Seleccionado");
-      eliminar.addActionListener(_ -> {
+      eliminar.addActionListener(e -> {
          int fila = table.getSelectedRow();
          if (fila >= 0) {
             int id = (Integer) model.getValueAt(fila, 0);
@@ -146,7 +146,7 @@ public class InterfazGrafica extends JFrame {
       }
 
       JButton agregar = new JButton("Agregar Servicio");
-      agregar.addActionListener(_ -> {
+      agregar.addActionListener(e -> {
          String nombre = this.solicitarSoloLetras("Nombre del servicio:");
          if (nombre == null || nombre.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre es obligatorio.");
@@ -179,7 +179,7 @@ public class InterfazGrafica extends JFrame {
       });
 
       JButton eliminar = new JButton("Eliminar Seleccionado");
-      eliminar.addActionListener(_ -> {
+      eliminar.addActionListener(e -> {
          int fila = table.getSelectedRow();
          if (fila >= 0) {
             int id = (Integer) model.getValueAt(fila, 0);
@@ -226,7 +226,7 @@ public class InterfazGrafica extends JFrame {
       }
 
       JButton agregar = new JButton("Agregar Reserva");
-      agregar.addActionListener(_ -> {
+      agregar.addActionListener(e -> {
          if (!this.baseDatos.obtenerTodosLosClientes().isEmpty() && !this.baseDatos.obtenerTodosLosBarberos().isEmpty() && !this.baseDatos.obtenerTodosLosServicios().isEmpty()) {
             Cliente cliente = (Cliente) JOptionPane.showInputDialog(this, "Selecciona el cliente:", "Cliente", 3, (Icon) null, this.baseDatos.obtenerTodosLosClientes().toArray(), (Object) null);
             Barbero barbero = (Barbero) JOptionPane.showInputDialog(this, "Selecciona el barbero:", "Barbero", 3, (Icon) null, this.baseDatos.obtenerTodosLosBarberos().toArray(), (Object) null);
@@ -256,7 +256,7 @@ public class InterfazGrafica extends JFrame {
          }
       });
       JButton eliminar = new JButton("Eliminar Seleccionado");
-      eliminar.addActionListener(_ -> {
+      eliminar.addActionListener(e -> {
          int fila = table.getSelectedRow();
          if (fila >= 0) {
             int id = (Integer) model.getValueAt(fila, 0);

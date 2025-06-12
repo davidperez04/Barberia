@@ -1,4 +1,4 @@
-package menu;
+package Menu;
 
 import controller.BarberoController;
 import datos.BaseDeDatos;

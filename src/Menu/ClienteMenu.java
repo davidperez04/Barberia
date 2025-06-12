@@ -1,4 +1,4 @@
-package menu;
+package Menu;
 
 import controller.ClienteController;
 import datos.BaseDeDatos;
