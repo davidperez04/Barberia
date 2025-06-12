@@ -36,13 +36,12 @@ public class InterfazGrafica extends JFrame {
       this.setVisible(true);
    }
 
-  private JPanel crearPanelBarberos() {
+ private JPanel crearPanelBarberos() {
     JPanel panel = new JPanel(new BorderLayout());
     DefaultTableModel model = new DefaultTableModel(
         new String[]{"ID", "Nombre", "Teléfono", "Especialidades", "Horarios"}, 0
     );
     JTable table = new JTable(model) {
-        // Permitir saltos de línea en la columna de horarios
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -66,6 +65,7 @@ public class InterfazGrafica extends JFrame {
         return area;
     });
 
+    // Llenar la tabla con los barberos y ajustar altura de filas
     for (Barbero barbero : this.baseDatos.obtenerTodosLosBarberos()) {
         String especialidades = String.join(", ", barbero.getEspecialidades());
         StringBuilder horarios = new StringBuilder();
@@ -89,8 +89,10 @@ public class InterfazGrafica extends JFrame {
     table.getColumnModel().getColumn(3).setPreferredWidth(120); // Especialidades
     table.getColumnModel().getColumn(4).setPreferredWidth(450); // Horarios
 
-    // Hacer que las filas se ajusten a la altura del contenido (para los saltos de línea)
-    table.setRowHeight(40);
+    // Ajustar altura de todas las filas según el contenido de la columna de horarios
+    for (int i = 0; i < model.getRowCount(); i++) {
+        ajustarAlturaFila(table, i, 4);
+    }
 
     JButton agregar = new JButton("Agregar Barbero");
     agregar.addActionListener(e -> {
@@ -104,11 +106,6 @@ public class InterfazGrafica extends JFrame {
             JOptionPane.showMessageDialog(this, "El teléfono es obligatorio.");
             return;
         }
-        String correo = this.solicitarCorreo("Email del barbero:");
-        if (correo == null || correo.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El correo es obligatorio.");
-            return;
-        }
         Barbero nuevo = new Barbero(this.baseDatos.getNextBarberoId(), nombre, telefono);
         this.baseDatos.agregarBarbero(nuevo);
         model.addRow(new Object[]{
@@ -118,6 +115,8 @@ public class InterfazGrafica extends JFrame {
             "",
             ""
         });
+        // Ajustar altura de la nueva fila
+        ajustarAlturaFila(table, model.getRowCount() - 1, 4);
     });
 
     JButton eliminar = new JButton("Eliminar Seleccionado");
@@ -170,6 +169,7 @@ public class InterfazGrafica extends JFrame {
                         horarios.append(h.toString()).append("\n");
                     }
                     model.setValueAt(horarios.toString().trim(), fila, 4);
+                    ajustarAlturaFila(table, fila, 4);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Datos de horario inválidos.");
                 }
@@ -216,13 +216,20 @@ public class InterfazGrafica extends JFrame {
     botones.add(verDisponibilidad);
 
     JScrollPane scroll = new JScrollPane(table);
-    // Hace que la tabla y el área de scroll se expandan con el panel
     scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
     panel.add(scroll, BorderLayout.CENTER);
     panel.add(botones, BorderLayout.SOUTH);
     return panel;
+}
+
+// Método para ajustar la altura de la fila según el contenido de la celda de horarios
+private void ajustarAlturaFila(JTable table, int fila, int columna) {
+    javax.swing.table.TableCellRenderer renderer = table.getCellRenderer(fila, columna);
+    java.awt.Component comp = table.prepareRenderer(renderer, fila, columna);
+    int altura = Math.max(40, comp.getPreferredSize().height);
+    table.setRowHeight(fila, altura);
 }
 
    private JPanel crearPanelClientes() {
