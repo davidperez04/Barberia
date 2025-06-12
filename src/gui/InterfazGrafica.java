@@ -69,7 +69,7 @@ public class InterfazGrafica extends JFrame {
     for (Barbero barbero : this.baseDatos.obtenerTodosLosBarberos()) {
         String especialidades = String.join(", ", barbero.getEspecialidades());
         StringBuilder horarios = new StringBuilder();
-        for (var h : barbero.getHorarioTrabajo()) {
+        for (modelo.Horario h : barbero.getHorarioTrabajo()) {
             horarios.append(h.toString()).append("\n");
         }
         model.addRow(new Object[]{
@@ -104,6 +104,10 @@ public class InterfazGrafica extends JFrame {
         String telefono = this.solicitarSoloNumeros("Teléfono del barbero:");
         if (telefono == null || telefono.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El teléfono es obligatorio.");
+            return;
+        }
+        if (telefono.length() != 10) {
+            JOptionPane.showMessageDialog(this, "El teléfono debe tener exactamente 10 dígitos.");
             return;
         }
         Barbero nuevo = new Barbero(this.baseDatos.getNextBarberoId(), nombre, telefono);
@@ -165,7 +169,7 @@ public class InterfazGrafica extends JFrame {
                     barbero.agregarHorario(nuevoHorario);
                     this.baseDatos.guardarDatos();
                     StringBuilder horarios = new StringBuilder();
-                    for (var h : barbero.getHorarioTrabajo()) {
+                    for (modelo.Horario h : barbero.getHorarioTrabajo()) {
                         horarios.append(h.toString()).append("\n");
                     }
                     model.setValueAt(horarios.toString().trim(), fila, 4);
@@ -257,6 +261,10 @@ private void ajustarAlturaFila(JTable table, int fila, int columna) {
          String telefono = this.solicitarSoloNumeros("Teléfono del cliente:");
          if (telefono == null || telefono.trim().isEmpty()) {
                JOptionPane.showMessageDialog(this, "El teléfono es obligatorio.");
+               return;
+         }
+         if (telefono.length() != 10) {
+               JOptionPane.showMessageDialog(this, "El teléfono debe tener exactamente 10 dígitos.");
                return;
          }
          String email = this.solicitarCorreo("Email del cliente:");
@@ -405,29 +413,30 @@ private void ajustarAlturaFila(JTable table, int fila, int columna) {
 }
    private JPanel crearPanelReservas() {
       JPanel panel = new JPanel(new BorderLayout());
-      DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Cliente", "Barbero", "Servicio", "Precio", "Fecha"}, 0);
+      // Agrega la columna "Estado"
+      DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Cliente", "Barbero", "Servicio", "Precio", "Fecha", "Estado"}, 0);
       JTable table = new JTable(model);
 
       for (Reserva reserva : this.baseDatos.obtenerTodasLasReservas()) {
          String nombreServicio = "";
          String precioServicio = "";
-         // Primero intenta obtener el servicio principal
          if (reserva.getServicio() != null) {
             nombreServicio = reserva.getServicio().getNombre();
             precioServicio = String.valueOf(reserva.getServicio().getPrecio());
          } else if (reserva.getServicios() != null && !reserva.getServicios().isEmpty()) {
-            // Si no hay servicio principal, toma el primero de la lista
             Servicio servicio = reserva.getServicios().get(0);
             nombreServicio = servicio.getNombre();
             precioServicio = String.valueOf(servicio.getPrecio());
          }
+         // Agrega el estado a la fila
          model.addRow(new Object[]{
             reserva.getIdReserva(),
             reserva.getCliente() != null ? reserva.getCliente().getNombre() : "",
             reserva.getBarbero() != null ? reserva.getBarbero().getNombre() : "",
             nombreServicio,
             precioServicio,
-            reserva.getFechaHora() != null ? reserva.getFechaHora().toString() : ""
+            reserva.getFechaHora() != null ? reserva.getFechaHora().toString() : "",
+            reserva.getEstado() != null ? reserva.getEstado().name() : ""
          });
       }
 
@@ -442,16 +451,39 @@ private void ajustarAlturaFila(JTable table, int fila, int columna) {
             try {
                LocalDateTime fecha = LocalDateTime.parse(fechaStr);
                if (cliente != null && barbero != null && servicio != null) {
+                  // Verifica si el barbero tiene un horario disponible para esa fecha y hora
+                  boolean disponible = false;
+                  for (modelo.Horario h : barbero.getHorarioTrabajo()) {
+                     java.time.LocalDate localDate = h.getFecha().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                     if (localDate.equals(fecha.toLocalDate()) && h.isDisponible()) {
+                        java.time.LocalTime inicio = java.time.LocalTime.parse(h.getHoraInicio());
+                        java.time.LocalTime fin = java.time.LocalTime.parse(h.getHoraFin());
+                        java.time.LocalTime horaReserva = fecha.toLocalTime();
+                        if (!horaReserva.isBefore(inicio) && horaReserva.isBefore(fin)) {
+                           disponible = true;
+                           h.setDisponible(false); // Marca como ocupado
+                           break;
+                        }
+                     }
+                  }
+                  String estado = disponible ? "CONFIRMADA" : "NO DISPONIBLE";
                   Reserva reserva = new Reserva(this.baseDatos.getNextReservaId(), fecha, cliente, barbero, servicio);
-                  this.baseDatos.agregarReserva(reserva);
+                  reserva.setEstado(disponible ? modelo.EstadoReserva.CONFIRMADA : modelo.EstadoReserva.PENDIENTE);
+                  if (disponible) {
+                     this.baseDatos.agregarReserva(reserva);
+                  }
                   model.addRow(new Object[]{
                      reserva.getIdReserva(),
                      cliente.getNombre(),
                      barbero.getNombre(),
                      servicio.getNombre(),
                      servicio.getPrecio(),
-                     fecha.toString()
+                     fecha.toString(),
+                     estado
                   });
+                  if (!disponible) {
+                     JOptionPane.showMessageDialog(this, "No hay horario disponible para esa fecha y hora. Reserva no confirmada.");
+                  }
                }
             } catch (Exception var9) {
                JOptionPane.showMessageDialog(this, "Fecha inválida. Debe estar en el formato AAAA-MM-DDTHH:MM");
