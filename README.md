@@ -25,7 +25,7 @@
 - Apoyó en pruebas funcionales y corrección de errores lógicos.
 - Se aseguró de que el desarrollo del trabajo siguiese los lineamientos del SDLC, asegurando un flujo adecuado y que se lograse lo planeado.
 
-#### Fabian camilo Perez Galvis 192518 - Desarrollador y Diseñador de Interfaz Gráfica.
+#### Fabian camilo Pérez Galvis 192518 - Desarrollador y Diseñador de Interfaz Gráfica.
 - Diseñó e implementó la interfaz gráfica del sistema utilizando Java Swing.
 - Desarrolló ventanas con JFrame, pestañas con JTabbedPane, y tablas con JTable.
 - Integró visualmente las funcionalidades del sistema en paneles de barberos, clientes, servicios y reservas.
@@ -226,26 +226,49 @@ Estas clases son invocadas desde el menú principal (Main) para ejecutar las ope
 - Los resultados de las operaciones se reflejan en la base de datos y se muestran al usuario.
 Estas clases encapsulan la lógica de negocio del sistema, asegurando que las operaciones se realicen de manera eficiente y organizada.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-### Instrucciones para Usar el Programa
-El sistema de Gestión de Barbería es una herramienta interactiva que permite administrar barberos, clientes, reservas y servicios de manera sencilla. Sigue estos pasos para utilizar el programa:
-#### 1. Inicio del Programa
-Ejecuta el programa desde tu entorno de desarrollo o terminal.
-Al iniciar, se mostrará un menú principal con las opciones disponibles.
-#### 2. Menú Principal
-El programa mostrará las siguientes opciones en pantalla:
-##### Gestionar barberos:
-Permite agregar, eliminar, listar barberos, asignar horarios y especialidades.
-- Gestionar clientes: Facilita el registro de clientes y la consulta de su historial de reservas.
-- Gestionar reservas: Proporciona herramientas para crear, confirmar, cancelar y completar reservas.
-- Gestionar servicios: Permite definir servicios, establecer precios y duración, y asignarlos a barberos.
-- Salir: Finaliza el programa y guarda automáticamente los datos.
-#### 3. Selección de Opciones
-Ingresa el número correspondiente a la opción que deseas realizar.
-Sigue las instrucciones que aparecerán en pantalla para completar la operación.
-#### 4. Finalización
-Para salir del programa, selecciona la opción "5. Salir".
-El sistema guardará automáticamente todos los datos antes de cerrar.
-Con estas instrucciones, podrás utilizar el sistema de Gestión de Barbería de manera rápida y sencilla.
+### Guía de Usuario para la Interfaz Gráfica del Programa
+Este documento detalla las instrucciones de uso para la interfaz gráfica de usuario (GUI) del programa. La aplicación está diseñada para ser intuitiva y facilitar la gestión de clientes, barberos, servicios y reservas.
+
+#### Navegación Principal
+Una vez iniciada la aplicación, la interfaz principal presentará cuatro pestañas de navegación:
+
+- Clientes
+- Barberos
+- Servicios
+- Reservas
+  
+Para acceder a las funcionalidades específicas de cada módulo, simplemente haga clic en la pestaña correspondiente.
+
+#### Gestión de Barberos
+La pestaña Barberos permite administrar el personal de la barbería. Las opciones disponibles se presentan a través de botones en la parte inferior de la pestaña:
+
+- Agregar Barbero: Ingrese los datos del nuevo barbero, como nombre, teléfono y correo electrónico.
+- Eliminar Barbero: Seleccione un barbero de la lista para proceder con su eliminación del sistema.
+- Asignar Especialidad: Permite definir o modificar las especialidades de un barbero existente.
+- Configurar Horario: Establezca o ajuste la disponibilidad horaria de un barbero.
+Todas las acciones se guían mediante mensajes interactivos que solicitan la información necesaria.
+
+#### Gestión de Clientes
+La pestaña Clientes está dedicada a la administración de la base de datos de clientes. Las funcionalidades disponibles son:
+
+- Agregar Cliente: Registre un nuevo cliente ingresando los datos solicitados.
+- Eliminar Cliente: Remueva un cliente existente de la base de datos.
+  
+####  Gestión de Servicios
+La pestaña Servicios permite configurar y mantener el catálogo de servicios ofrecidos por la barbería:
+
+- Agregar Servicio: Ingrese los detalles del nuevo servicio, incluyendo nombre, descripción, precio y duración en minutos.
+- Eliminar Servicio: Retire un servicio del catálogo.
+  
+#### Gestión de Reservas
+La pestaña Reservas es el módulo central para la programación y administración de citas. Las opciones disponibles son:
+- Agregar Reserva: Cree una nueva reserva. El proceso incluye la selección de:
+El cliente que realiza la reserva.
+El barbero deseado.
+La fecha y hora específicas de la cita.
+El servicio a realizar, lo que influirá en el cálculo del precio final.
+- Eliminar Reserva: Cancele o elimine una reserva existente.
+El uso de la aplicación se ha simplificado para requerir únicamente la interacción con los botones y la introducción de los datos solicitados por el sistema.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Este es el digrama UML para las clases del sistema de gestión de reservas en una barbería
